@@ -1,6 +1,6 @@
 package com.example.springboot.services;
 
-import com.example.springboot.entity.Expert;
+import com.example.springboot.entity.Account;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.repository.ExpertRepository;
 import com.example.springboot.validation.Validation;
@@ -16,15 +16,15 @@ public class ExpertServiceimpl implements ExpertService {
     }
 
     @Override
-    public Expert saveExpert(Expert expert) throws ExpertException {
-        final String password = expert.getPassword();
-        final String email = expert.getEmail();
+    public Account saveExpert(Account account) throws ExpertException {
+        final String password = account.getPassword();
+        final String email = account.getEmail();
         Validation validation = new Validation();
         if (!validation.validPassword(password))
-            throw new ExpertException("password should have at a capital Letter and a minimal Letter and 8 character");
+            throw new ExpertException("password should have at least a capital Letter and a minimal Letter and 8 character");
         if (!validation.validateEmail(email))
             throw new ExpertException("Email not valid");
-        return expertRepository.save(expert);
+        return expertRepository.save(account);
 
     }
 }

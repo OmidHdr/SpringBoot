@@ -1,7 +1,7 @@
 package com.example.springboot.services;
 
 import com.example.springboot.entity.Admin;
-import com.example.springboot.entity.Expert;
+import com.example.springboot.entity.Account;
 import com.example.springboot.repository.AdminRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class AdminServiceimpl implements AdminService{
     }
 
     @Override
-    public Expert confirmExpert(Expert expert) {
+    public Account confirmExpert(Account account) {
         return null;
     }
 

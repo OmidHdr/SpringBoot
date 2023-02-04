@@ -1,6 +1,6 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.entity.Expert;
+import com.example.springboot.entity.Account;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.services.ExpertService;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +15,7 @@ public class AdminControler {
         this.expertService = expertService;
     }
 
-    //section confirm Expert
-    @PostMapping("/expert")
-    public Expert saveExpert(@RequestBody Expert expert) throws ExpertException {
-        return expertService.saveExpert(expert);
-    }
+
 
 //    @PostMapping("/admin")
 //    public Admin saveAdmin(@RequestBody Admin admin){
