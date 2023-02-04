@@ -1,6 +1,7 @@
 package com.example.springboot.services;
 
 import com.example.springboot.entity.Account;
+import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Enum.UserRole;
 import com.example.springboot.exeption.CustomerException;
 import com.example.springboot.repository.CustomerRepository;
@@ -18,7 +19,7 @@ public class CustomerServiceimpl implements CustomerService{
 
     //section save Customer
     @Override
-    public Account saveCustomer(Account account) throws CustomerException {
+    public Customer saveCustomer(Customer account) throws CustomerException {
         final UserRole userRole = account.getUserRole();
         Validation validation = new Validation();
         if (!validation.validString(account.getFirstName())&& validation.validString(account.getLastName()))
@@ -33,9 +34,9 @@ public class CustomerServiceimpl implements CustomerService{
         return customerRepository.save(account);
     }
 
-    //section login with User pass
     @Override
-    public Account findByUsernameAndPassword(String username , String password) {
-        return customerRepository.findByUsernameAndPassword(username,password);
+    public Customer findByUsernameAndPassword(String username, String password) {
+        return customerRepository.findByUsernameAndPassword(username, password);
     }
+
 }

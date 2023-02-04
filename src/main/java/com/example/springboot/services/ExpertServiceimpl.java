@@ -1,6 +1,7 @@
 package com.example.springboot.services;
 
 import com.example.springboot.entity.Account;
+import com.example.springboot.entity.Expert;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.repository.ExpertRepository;
 import com.example.springboot.validation.Validation;
@@ -16,7 +17,7 @@ public class ExpertServiceimpl implements ExpertService {
     }
 
     @Override
-    public Account saveExpert(Account account) throws ExpertException {
+    public Account saveExpert(Expert account) throws ExpertException {
         final String password = account.getPassword();
         final String email = account.getEmail();
         Validation validation = new Validation();
@@ -29,5 +30,10 @@ public class ExpertServiceimpl implements ExpertService {
         account.setInventory(0);
         return expertRepository.save(account);
 
+    }
+
+    @Override
+    public Expert findByUsernameAndPassword(String username, String password) {
+        return expertRepository.findByUsernameAndPassword(username, password);
     }
 }

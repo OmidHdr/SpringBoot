@@ -1,6 +1,8 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.entity.Account;
+import com.example.springboot.entity.Customer;
+import com.example.springboot.entity.Expert;
 import com.example.springboot.exeption.CustomerException;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.services.CustomerService;
@@ -26,21 +28,28 @@ public class Controller {
         return "Welcome to this Application !! ";
     }
 
-    //section save Expert
+    //section register Expert
     @PostMapping("/registerExpert")
-    public Account saveExpert(@RequestBody Account account) throws ExpertException {
+    public Account saveExpert(@RequestBody Expert account) throws ExpertException {
         return expertService.saveExpert(account);
     }
 
+    //section register Customer
     @PostMapping("/registerCustomer")
-    public Account saveCustomer(@RequestBody Account account) throws CustomerException {
+    public Account saveCustomer(@RequestBody Customer account) throws CustomerException {
         return customerService.saveCustomer(account);
     }
 
-    @GetMapping("/login")
-    public  Account getCustomer(@RequestBody Account account) {
-        return customerService.findByUsernameAndPassword(account.getUsername(),account.getPassword());
+    //section login Expert
+    @GetMapping("/loginExpert")
+    public Expert getExpert(@RequestBody Expert account) {
+        return expertService.findByUsernameAndPassword(account.getUsername(),account.getPassword());
     }
 
+    //section login Customer
+    @GetMapping("/loginCustomer")
+    public Customer getCustomer(@RequestBody Customer account){
+        return customerService.findByUsernameAndPassword(account.getUsername(),account.getPassword());
+    }
 
 }
