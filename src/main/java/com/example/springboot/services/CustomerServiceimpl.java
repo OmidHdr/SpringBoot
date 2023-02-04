@@ -21,6 +21,8 @@ public class CustomerServiceimpl implements CustomerService{
     public Account saveCustomer(Account account) throws CustomerException {
         final UserRole userRole = account.getUserRole();
         Validation validation = new Validation();
+        if (!validation.validString(account.getFirstName())&& validation.validString(account.getLastName()))
+            throw new CustomerException("wrong firstname or lastname !!");
         if (!userRole.equals(UserRole.CUSTOMER))
             throw new CustomerException("Wrong role !!");
         if (!validation.validPassword(account.getPassword()))

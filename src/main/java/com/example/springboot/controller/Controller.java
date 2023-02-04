@@ -27,12 +27,12 @@ public class Controller {
     }
 
     //section save Expert
-    @PostMapping("/expert")
+    @PostMapping("/registerExpert")
     public Account saveExpert(@RequestBody Account account) throws ExpertException {
         return expertService.saveExpert(account);
     }
 
-    @PostMapping("/customer")
+    @PostMapping("/registerCustomer")
     public Account saveCustomer(@RequestBody Account account) throws CustomerException {
         return customerService.saveCustomer(account);
     }
