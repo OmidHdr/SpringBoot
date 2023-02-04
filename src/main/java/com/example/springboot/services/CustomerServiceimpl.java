@@ -30,4 +30,10 @@ public class CustomerServiceimpl implements CustomerService{
         account.setInventory(0);
         return customerRepository.save(account);
     }
+
+    //section login with User pass
+    @Override
+    public Account findByUsernameAndPassword(String username , String password) {
+        return customerRepository.findByUsernameAndPassword(username,password);
+    }
 }

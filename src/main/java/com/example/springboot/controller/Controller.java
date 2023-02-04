@@ -37,5 +37,10 @@ public class Controller {
         return customerService.saveCustomer(account);
     }
 
+    @GetMapping("/login")
+    public  Account getCustomer(@RequestBody Account account) {
+        return customerService.findByUsernameAndPassword(account.getUsername(),account.getPassword());
+    }
+
 
 }
