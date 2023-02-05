@@ -14,7 +14,8 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Expert extends Account{
-//    byte[] image;
+
+    byte[] image;
 
     @ManyToMany
     Set<Services> services;

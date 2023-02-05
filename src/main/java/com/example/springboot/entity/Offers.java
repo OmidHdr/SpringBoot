@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Offers {
@@ -17,11 +18,12 @@ public class Offers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     Long id;
-
-
     LocalDate date = LocalDate.now();
 
-    
+    @ManyToOne
+    Order order;
 
+    Long customerSuggestion;
+    Long expertSuggestion;
 
 }
