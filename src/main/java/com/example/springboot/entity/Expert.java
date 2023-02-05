@@ -18,9 +18,9 @@ public class Expert extends Account{
     byte[] image;
 
     @ManyToMany
-    Set<Services> services;
+    Set<Tasks> services;
 
     @ManyToMany
-    Set<SubServices> subServices;
+    Set<SubTasks> subServices;
 
 }

@@ -1,9 +1,9 @@
 package com.example.springboot.repository;
 
-import com.example.springboot.entity.Services;
+import com.example.springboot.entity.SubTasks;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ServiceRepository extends JpaRepository<Services,Long> {
+public interface SubTasksRepository extends JpaRepository<SubTasks,Long> {
 }
