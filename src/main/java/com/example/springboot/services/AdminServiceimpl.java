@@ -8,11 +8,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminServiceimpl implements AdminService{
 
-    private AdminRepository adminRepository;
+    private final AdminRepository adminRepository;
 
     public AdminServiceimpl(AdminRepository adminRepository) {
         this.adminRepository = adminRepository;
     }
+
 
     @Override
     public Admin saveAdmin(Admin admin) {

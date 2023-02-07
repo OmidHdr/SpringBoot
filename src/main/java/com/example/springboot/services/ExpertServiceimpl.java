@@ -17,7 +17,7 @@ public class ExpertServiceimpl implements ExpertService {
     }
 
     @Override
-    public Account saveExpert(Expert account) throws ExpertException {
+    public Expert saveExpert(Expert account) throws ExpertException {
         final String password = account.getPassword();
         final String email = account.getEmail();
         Validation validation = new Validation();

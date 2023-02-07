@@ -33,9 +33,11 @@ public class CustomerServiceimpl implements CustomerService{
         return customerRepository.save(account);
     }
 
+    //section find
     @Override
     public Customer findByUsernameAndPassword(String username, String password) {
         return customerRepository.findByUsernameAndPassword(username, password);
     }
+
 
 }

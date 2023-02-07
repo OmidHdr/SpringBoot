@@ -8,4 +8,5 @@ public interface CustomerService {
     Customer saveCustomer(Customer account) throws CustomerException;
 
     Customer findByUsernameAndPassword(String username, String password);
+
 }

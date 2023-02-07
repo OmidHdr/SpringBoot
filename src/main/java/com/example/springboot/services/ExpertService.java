@@ -5,6 +5,6 @@ import com.example.springboot.entity.Expert;
 import com.example.springboot.exeption.ExpertException;
 
 public interface ExpertService {
-    Account saveExpert(Expert account) throws ExpertException;
+    Expert saveExpert(Expert account) throws ExpertException;
     Expert findByUsernameAndPassword(String username, String password);
 }
