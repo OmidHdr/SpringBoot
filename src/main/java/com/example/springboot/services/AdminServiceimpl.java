@@ -22,14 +22,9 @@ public class AdminServiceimpl implements AdminService{
 
     @Override
     public Admin getAdmin(String username, String password) {
-        return null;
+        return adminRepository.findByUsernameAndPassword(username, password);
     }
 
-    @Override
-    public Account confirmExpert(Account account) {
-        return null;
-    }
 
-    
 
 }

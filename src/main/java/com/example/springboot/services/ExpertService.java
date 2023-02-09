@@ -7,4 +7,10 @@ import com.example.springboot.exeption.ExpertException;
 public interface ExpertService {
     Expert saveExpert(Expert account) throws ExpertException;
     Expert findByUsernameAndPassword(String username, String password);
+
+    Expert confirmExpert(Expert expert);
+    Expert requestForNewJob();
+
+    Expert changePassword(Expert expert , String newPassword);
+
 }

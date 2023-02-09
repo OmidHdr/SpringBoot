@@ -4,16 +4,14 @@ import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Enum.UserRole;
 import com.example.springboot.exeption.CustomerException;
 import com.example.springboot.repository.CustomerRepository;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
@@ -28,6 +26,7 @@ class CustomerServiceimplTest {
 
     @Test
     @Order(1)
+    @DisplayName("Register")
     void saveCustomer() throws CustomerException {
         Customer customer = Customer.builder()
                 .firstName("omid")
@@ -44,13 +43,20 @@ class CustomerServiceimplTest {
 
     @Test
     @Order(2)
+    @DisplayName("login")
     void findByUsernameAndPassword() {
         Customer customer = Customer.builder().username("omidalfa").password("Aa@123456").build();
         BDDMockito.given(customerRepository.findByUsernameAndPassword("omidalfa","Aa@123456")).willReturn(customer);
         Customer user = customerService.findByUsernameAndPassword("omidalfa", "Aa@123456");
         assertNotNull(user);
-        assertNotNull("omid@gmail.com",user.getEmail());
     }
 
-    
+
+    @Test
+    void changePassword() {
+        Customer customer = Customer.builder().username("omid@gmail.com").password("Aa@123456").build();
+        BDDMockito.given(customerRepository.save(customer)).willReturn(customer);
+        final Customer newCustomer = customerService.changePassword(customer, "Aa123456@");
+        assertThat(newCustomer.getPassword()).isEqualTo("Aa123456@");
+    }
 }

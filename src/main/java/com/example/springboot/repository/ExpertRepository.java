@@ -1,6 +1,5 @@
 package com.example.springboot.repository;
 
-import com.example.springboot.entity.Account;
 import com.example.springboot.entity.Expert;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

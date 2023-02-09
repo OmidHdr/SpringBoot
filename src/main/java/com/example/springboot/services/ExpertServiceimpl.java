@@ -1,6 +1,5 @@
 package com.example.springboot.services;
 
-import com.example.springboot.entity.Account;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.repository.ExpertRepository;
@@ -34,6 +33,24 @@ public class ExpertServiceimpl implements ExpertService {
 
     @Override
     public Expert findByUsernameAndPassword(String username, String password) {
-        return expertRepository.findByUsernameAndPassword(username, password);
+        return expertRepository.findByUsernameAndPassword(username,password);
     }
+
+    @Override
+    public Expert confirmExpert(Expert expert) {
+        expert.setStatus(true);
+        return expertRepository.save(expert);
+    }
+
+    @Override
+    public Expert requestForNewJob() {
+        return null;
+    }
+
+    @Override
+    public Expert changePassword(Expert expert, String newPassword) {
+        expert.setPassword(newPassword);
+        return expertRepository.save(expert);
+    }
+
 }

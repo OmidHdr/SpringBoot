@@ -9,4 +9,5 @@ public interface CustomerService {
 
     Customer findByUsernameAndPassword(String username, String password);
 
+    Customer changePassword(Customer customer , String newPassword);
 }

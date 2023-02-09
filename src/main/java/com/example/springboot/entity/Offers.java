@@ -21,7 +21,7 @@ public class Offers {
     LocalDate date = LocalDate.now();
 
     @ManyToOne
-    Order order;
+    Orders orders;
 
     Long customerSuggestion;
     Long expertSuggestion;

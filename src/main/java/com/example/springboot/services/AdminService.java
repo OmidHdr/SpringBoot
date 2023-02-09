@@ -8,5 +8,4 @@ public interface AdminService {
 
     Admin getAdmin(String username, String password);
 
-    Account confirmExpert(Account account);
 }

@@ -1,6 +1,6 @@
 package com.example.springboot.services;
 
-import com.example.springboot.entity.Order;
+import com.example.springboot.entity.Orders;
 import com.example.springboot.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +14,8 @@ public class OrderServiceimpl implements OrderService{
     }
 
     @Override
-    public Order saveOrder(Order order) {
-        return orderRepository.save(order);
+    public Orders saveOrder(Orders orders) {
+        return orderRepository.save(orders);
     }
 
 }

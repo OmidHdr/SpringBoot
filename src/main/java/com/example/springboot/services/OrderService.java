@@ -1,7 +1,7 @@
 package com.example.springboot.services;
 
-import com.example.springboot.entity.Order;
+import com.example.springboot.entity.Orders;
 
 public interface OrderService {
-    Order saveOrder(Order order);
+    Orders saveOrder(Orders orders);
 }

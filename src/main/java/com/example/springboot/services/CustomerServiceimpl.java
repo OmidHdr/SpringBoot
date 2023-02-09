@@ -39,5 +39,11 @@ public class CustomerServiceimpl implements CustomerService{
         return customerRepository.findByUsernameAndPassword(username, password);
     }
 
+    @Override
+    public Customer changePassword(Customer customer, String newPassword) {
+        customer.setPassword(newPassword);
+        return customerRepository.save(customer);
+    }
+
 
 }
