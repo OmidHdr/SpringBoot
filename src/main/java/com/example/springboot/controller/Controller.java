@@ -28,27 +28,10 @@ public class Controller {
         return "Welcome to this Application !! ";
     }
 
-    //section register Expert
-    @PostMapping("/registerExpert")
-    public Expert saveExpert(@RequestBody Expert account) throws ExpertException {
-        return expertService.saveExpert(account);
-    }
-
-    //section register Customer
-    @PostMapping("/registerCustomer")
-    public Customer saveCustomer(@RequestBody Customer account) throws CustomerException {
-        return customerService.saveCustomer(account);
-    }
-
-    //section login Expert
-    @GetMapping("/loginExpert")
-    public Expert getExpert(@RequestBody Expert account) {
-        return expertService.findByUsernameAndPassword(account.getUsername(),account.getPassword());
-    }
 
     //section login Customer
     @GetMapping("/loginCustomer")
-    public Customer getCustomer(@RequestBody Customer account){
+    public Customer getCustomer(@RequestBody Customer account) throws CustomerException {
         return customerService.findByUsernameAndPassword(account.getUsername(),account.getPassword());
     }
 

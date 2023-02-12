@@ -1,11 +1,12 @@
 package com.example.springboot.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @Setter
 @Getter
@@ -16,14 +17,16 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @SuperBuilder
 public class Expert extends Account{
 
-    Boolean status = false;
+    Boolean status ;
 
     byte[] image;
 
+    @JoinColumn(nullable = false)
     @ManyToOne
-    Tasks services;
+    Tasks tasks;
 
+    @JoinColumn(nullable = false)
     @ManyToOne
-    SubTasks subServices;
+    SubTasks subTasks;
 
 }

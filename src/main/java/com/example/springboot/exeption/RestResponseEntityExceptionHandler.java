@@ -13,15 +13,25 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ExpertException.class)
-    public ResponseEntity<ErrorMessage> departmentNotFound(ExpertException exception){
-        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST,exception.getMessage());
+    public ResponseEntity<ErrorMessage> departmentNotFound(ExpertException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 
     @ExceptionHandler(CustomerException.class)
-    public ResponseEntity<ErrorMessage> departmentNotFound(CustomerException exception){
-        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST,exception.getMessage());
+    public ResponseEntity<ErrorMessage> departmentNotFound(CustomerException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 
+    @ExceptionHandler(TasksException.class)
+    public ResponseEntity<ErrorMessage> serviceAlreadyExists(TasksException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
+    @ExceptionHandler(SubTasksException.class)
+    public ResponseEntity<ErrorMessage> SubServiceAlreadyExist(SubTasksException exception){
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
 }

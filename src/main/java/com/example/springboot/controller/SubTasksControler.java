@@ -1,6 +1,7 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.entity.SubTasks;
+import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.services.SubTaskServices;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class SubTasksControler {
     }
 
     @PostMapping("/saveSubTasks")
-    public SubTasks saveSubTask(@RequestBody SubTasks sub){
+    public SubTasks saveSubTask(@RequestBody SubTasks sub) throws SubTasksException {
         return subTaskServices.saveSubTask(sub);
     }
 

@@ -1,6 +1,7 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.entity.Tasks;
+import com.example.springboot.exeption.TasksException;
 import com.example.springboot.services.TasksServices;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class TasksControler {
     }
 
     @PostMapping("/saveTasks")
-    public Tasks saveService(@RequestBody Tasks service){
+    public Tasks saveService(@RequestBody Tasks service) throws TasksException {
         return services.saveTask(service);
     }
 

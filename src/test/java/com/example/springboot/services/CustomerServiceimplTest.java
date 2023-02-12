@@ -3,29 +3,22 @@ package com.example.springboot.services;
 import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Enum.UserRole;
 import com.example.springboot.exeption.CustomerException;
-import com.example.springboot.repository.CustomerRepository;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ExtendWith(MockitoExtension.class)
+//@RunWith(SpringRunner.class)
+@SpringBootTest
 class CustomerServiceimplTest {
 
-    @Mock
-    private CustomerRepository customerRepository;
-    @InjectMocks
+    @Autowired
     private CustomerServiceimpl customerService;
 
     @Test
-    @Order(1)
     @DisplayName("Register")
     void saveCustomer() throws CustomerException {
         Customer customer = Customer.builder()
@@ -36,26 +29,19 @@ class CustomerServiceimplTest {
                 .password("Aa@123456")
                 .userRole(UserRole.CUSTOMER)
                 .build();
-        BDDMockito.given(customerRepository.save(customer)).willReturn(customer);
         Customer customer1 = customerService.saveCustomer(customer);
         assertNotNull(customer1);
     }
 
     @Test
-    @Order(2)
     @DisplayName("login")
     void findByUsernameAndPassword() {
-        Customer customer = Customer.builder().username("omidalfa").password("Aa@123456").build();
-        BDDMockito.given(customerRepository.findByUsernameAndPassword("omidalfa","Aa@123456")).willReturn(customer);
         Customer user = customerService.findByUsernameAndPassword("omidalfa", "Aa@123456");
         assertNotNull(user);
     }
-
-
     @Test
     void changePassword() {
         Customer customer = Customer.builder().username("omid@gmail.com").password("Aa@123456").build();
-        BDDMockito.given(customerRepository.save(customer)).willReturn(customer);
         final Customer newCustomer = customerService.changePassword(customer, "Aa123456@");
         assertThat(newCustomer.getPassword()).isEqualTo("Aa123456@");
     }

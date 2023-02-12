@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SubTasksRepository extends JpaRepository<SubTasks,Long> {
+    SubTasks findByName(String name);
 }

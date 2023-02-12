@@ -9,23 +9,20 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
-class TasksServiceimplTest {
+@SpringBootTest
+class TasksServiceimplTest2 {
 
-    @Mock
-    private TasksRepository tasksRepository;
-
-    @InjectMocks
+    @Autowired
     private TasksServiceimpl tasksService;
 
     @Test
     void saveTask() throws TasksException {
         Tasks tasks = Tasks.builder().name("house").build();
-        BDDMockito.given(tasksRepository.save(tasks)).willReturn(tasks);
         final Tasks result = tasksService.saveTask(tasks);
         assertThat(result).isNotNull();
     }

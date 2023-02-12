@@ -38,7 +38,7 @@ class ExpertServiceimplTest {
                 .basePrice(120000L).build();
         Expert expert = Expert.builder().firstName("ali").lastName("alizadeh").email("ali@gmail.com")
                 .password("Aa@123456").userRole(UserRole.EXPERT).username("ali@gmail.com")
-                .services(tasks).subServices(subTasks).build();
+                .tasks(tasks).subTasks(subTasks).build();
         BDDMockito.given(expertRepository.save(expert)).willReturn(expert);
         Expert result = expertService.saveExpert(expert);
         assertNotNull(result);
@@ -57,14 +57,13 @@ class ExpertServiceimplTest {
 
     //section find by user pass
     @Test
-    void findByUsernameAndPassword() {
-
+    void findByUsernameAndPassword() throws ExpertException {
         Tasks tasks = Tasks.builder().name("house").build();
         SubTasks subTasks = SubTasks.builder().name("cleaning house").task(tasks).description("clean whole house")
                 .basePrice(120000L).build();
         Expert expert = Expert.builder().firstName("ali").lastName("alizadeh").email("ali@gmail.com")
                 .password("Aa@123456").userRole(UserRole.EXPERT).username("ali@gmail.com")
-                .services(tasks).subServices(subTasks).build();
+                .tasks(tasks).subTasks(subTasks).build();
 
         BDDMockito.given(expertRepository.findByUsernameAndPassword(expert.getUsername(),expert.getPassword())).willReturn(expert);
         Expert result = expertService.findByUsernameAndPassword(expert.getUsername(),expert.getPassword());
@@ -78,4 +77,31 @@ class ExpertServiceimplTest {
         final Expert newExpert = expertService.changePassword(expert, "Aa123456@");
         assertThat(newExpert.getPassword()).isEqualTo("Aa123456@");
     }
+
+    @Test
+    void removeSubServiceFromExpert() {
+        Tasks tasks = Tasks.builder().name("house").build();
+        SubTasks subTasks = SubTasks.builder().name("cleaning house").task(tasks).description("clean whole house")
+                .basePrice(120000L).build();
+        Expert expert = Expert.builder().firstName("ali").lastName("alizadeh").email("ali@gmail.com")
+                .password("Aa@123456").userRole(UserRole.EXPERT).username("ali@gmail.com")
+                .tasks(tasks).subTasks(subTasks).build();
+        BDDMockito.given(expertRepository.save(expert)).willReturn(expert);
+//        final Expert result = expertService.removeSubServiceFromExpert(expert, subTasks);
+//        assertThat(result).isNotNull();
+    }
+
+    @Test
+    void requestForNewJob() {
+        Tasks tasks = Tasks.builder().name("house").build();
+        SubTasks subTasks = SubTasks.builder().name("cleaning house").task(tasks).description("clean whole house")
+                .basePrice(120000L).build();
+        Expert expert = Expert.builder().firstName("ali").lastName("alizadeh").email("ali@gmail.com")
+                .password("Aa@123456").userRole(UserRole.EXPERT).username("ali@gmail.com")
+                .tasks(tasks).subTasks(subTasks).build();
+        BDDMockito.given(expertRepository.save(expert)).willReturn(expert);
+//        final Expert result = expertService.removeSubServiceFromExpert(expert, subTasks);
+//        assertThat(result).isNotNull();
+    }
+
 }

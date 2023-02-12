@@ -1,6 +1,7 @@
 package com.example.springboot.services;
 
 import com.example.springboot.entity.Tasks;
+import com.example.springboot.exeption.TasksException;
 import com.example.springboot.repository.TasksRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,13 @@ public class TasksServiceimpl implements TasksServices {
     }
 
     @Override
-    public Tasks saveTask(Tasks service) {
-        return repository.save(service);
+    public Tasks saveTask(Tasks service) throws TasksException {
+        try {
+            return repository.save(service);
+        } catch (Exception e) {
+            throw new TasksException("Service Already exist");
+        }
+
     }
 
     @Override
