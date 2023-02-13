@@ -1,12 +1,11 @@
 package com.example.springboot.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @Setter
 @Getter
@@ -22,11 +21,11 @@ public class Expert extends Account{
     byte[] image;
 
     @JoinColumn(nullable = false)
-    @ManyToOne
-    Tasks tasks;
+    @ManyToMany
+    List<Tasks> tasks;
 
     @JoinColumn(nullable = false)
-    @ManyToOne
-    SubTasks subTasks;
+    @ManyToMany
+    List<SubTasks> subTasks;
 
 }

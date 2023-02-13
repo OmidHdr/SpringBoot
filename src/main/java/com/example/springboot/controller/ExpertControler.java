@@ -1,7 +1,11 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.ReguestJob;
 import com.example.springboot.entity.Expert;
+import com.example.springboot.entity.SubTasks;
 import com.example.springboot.exeption.ExpertException;
+import com.example.springboot.exeption.SubTasksException;
+import com.example.springboot.exeption.TasksException;
 import com.example.springboot.services.ExpertServiceimpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,21 +25,32 @@ public class ExpertControler {
 
     //section register Expert
     @PostMapping("/registerExpert")
-    public Expert saveExpert(@RequestBody Expert account) throws ExpertException {
+    public Expert saveExpert(@RequestBody Expert account) throws ExpertException, SubTasksException, TasksException {
         return expertService.saveExpert(account);
     }
 
     //section login Expert
     @GetMapping("/loginExpert")
-    public Expert getExpert(@RequestBody Expert account) throws ExpertException {
-        return expertService.findByUsernameAndPassword(account.getUsername(),account.getPassword());
+    public Expert getExpert(@RequestBody Expert expert) throws ExpertException {
+        return expertService.findByUsernameAndPassword(expert);
     }
+    //section confirm expert
     @PostMapping("/confirmExpert")
     public Expert confirmExpert(@RequestBody Expert expert) throws ExpertException {
         return expertService.confirmExpert(expert);
     }
+    //section show unConfirm
     @GetMapping("/showUnconfirmExpert")
-    public List<Expert> showUnconfirmExpert(){
+    public List<Expert> showUnconfirmExpert() throws ExpertException {
         return expertService.showUnconfirmExpert();
+    }
+    //section change Pass
+    @PostMapping("/changePasswordExpert")
+    public Expert changePasswordExpert(@RequestBody Expert expert,String newPassword) throws ExpertException {
+        return expertService.changePassword(expert,newPassword);
+    }
+    @PostMapping("/requestJob")
+    public Expert requestNewJob(@RequestBody ReguestJob job) throws ExpertException, SubTasksException, TasksException {
+        return expertService.requestForNewJob(job);
     }
 }

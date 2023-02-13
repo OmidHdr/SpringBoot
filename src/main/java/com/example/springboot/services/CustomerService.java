@@ -10,6 +10,6 @@ public interface CustomerService {
 
     Customer findByUsernameAndPassword(String username, String password) throws CustomerException;
 
-    Customer changePassword(Customer customer , String newPassword);
+    Customer changePassword(String username, String password, String newPassword) throws CustomerException;
 
 }

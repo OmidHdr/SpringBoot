@@ -8,4 +8,7 @@ import java.util.List;
 public interface SubTaskServices {
     SubTasks saveSubTask(SubTasks sub) throws SubTasksException;
     List<SubTasks> allSubTasks();
+
+    SubTasks findByName(String name) throws SubTasksException;
+
 }

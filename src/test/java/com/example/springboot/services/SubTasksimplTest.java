@@ -2,6 +2,7 @@ package com.example.springboot.services;
 
 import com.example.springboot.entity.SubTasks;
 import com.example.springboot.entity.Tasks;
+import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.repository.SubTasksRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +23,7 @@ class SubTasksimplTest {
     private SubTasksimpl subService;
 
     @Test
-    void saveSubTask() {
+    void saveSubTask() throws SubTasksException {
         Tasks task = Tasks.builder().name("house").build();
         SubTasks subTasks = SubTasks.builder().name("washing Dishes").task(task).description("cleaning hole house")
                 .basePrice(120000L).build();

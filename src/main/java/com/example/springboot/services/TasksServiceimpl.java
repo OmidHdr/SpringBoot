@@ -26,8 +26,19 @@ public class TasksServiceimpl implements TasksServices {
 
     }
 
+    //section all tasks
     @Override
     public List<Tasks> allTasks() {
         return repository.findAll();
     }
+
+    //section find by name
+    @Override
+    public Tasks findByName(String name) throws TasksException {
+        final Tasks byName = repository.findByName(name);
+        if (byName == null)
+            throw new TasksException("Wrong task name");
+        return byName;
+    }
+
 }

@@ -49,10 +49,14 @@ public class CustomerServiceimpl implements CustomerService {
         return customer;
     }
 
+    //section change password
     @Override
-    public Customer changePassword(Customer customer, String newPassword) {
-        customer.setPassword(newPassword);
-        return customerRepository.save(customer);
+    public Customer changePassword(String username , String password, String newPassword) throws CustomerException {
+        final Customer byUsername = findByUsernameAndPassword(username,password);
+        if (!Validation.validPassword(newPassword))
+            throw new CustomerException("password should have at least a capital Letter and a minimal Letter and 8 character");
+        byUsername.setPassword(newPassword);
+        return customerRepository.save(byUsername);
     }
 
 

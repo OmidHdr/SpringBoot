@@ -8,4 +8,7 @@ import java.util.List;
 public interface TasksServices {
     Tasks saveTask(Tasks service) throws TasksException;
     List<Tasks> allTasks();
+
+    Tasks findByName(String name) throws TasksException;
+
 }

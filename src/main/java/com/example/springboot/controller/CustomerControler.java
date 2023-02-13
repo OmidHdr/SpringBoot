@@ -25,4 +25,8 @@ public class CustomerControler {
     public Customer loginCustomer(@RequestBody Customer customer) throws CustomerException {
         return customerService.findByUsernameAndPassword(customer.getUsername(),customer.getPassword());
     }
+    @PostMapping("/changePasswordCustomer")
+    public Customer changePassword(@RequestBody Customer customer, String newPassword) throws CustomerException {
+        return customerService.changePassword(customer.getUsername(),customer.getPassword() , newPassword);
+    }
 }

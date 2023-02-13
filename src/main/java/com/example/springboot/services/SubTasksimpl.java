@@ -20,7 +20,7 @@ public class SubTasksimpl implements SubTaskServices {
         this.tasksRepository = tasksRepository;
     }
 
-
+    //section save
     @Override
     public SubTasks saveSubTask(SubTasks sub) throws SubTasksException {
         if (sub.getTask().getName() == null)
@@ -37,9 +37,20 @@ public class SubTasksimpl implements SubTaskServices {
         }
     }
 
+    //section all subtask
     @Override
     public List<SubTasks> allSubTasks() {
         return repository.findAll();
+    }
+
+    //section find by name
+    @Override
+    public SubTasks findByName(String name) throws SubTasksException {
+        final SubTasks byName = repository.findByName(name);
+        if (byName == null)
+            throw new SubTasksException("wrong subtask name");
+        return byName;
+
     }
 
 
