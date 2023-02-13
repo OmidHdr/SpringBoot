@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
+
 @Service
 public class ExpertServiceimpl implements ExpertService {
 
@@ -54,7 +55,6 @@ public class ExpertServiceimpl implements ExpertService {
         account.setInventory(0);
         account.setStatus(false);
         account.setDate(LocalDate.now());
-        //todo add this
         account.setSubTasks(Collections.singletonList(findSub));
         account.setTasks(Collections.singletonList(findTask));
         try {
@@ -72,7 +72,6 @@ public class ExpertServiceimpl implements ExpertService {
             throw new ExpertException("Expert not found");
         if (!expert.getStatus())
             throw new ExpertException("this expert is deactivate first admin should confirm");
-        System.out.println(expert.getStatus());
         return expert;
     }
 
@@ -98,6 +97,8 @@ public class ExpertServiceimpl implements ExpertService {
         final Expert byUserPass = expertRepository.findByUsernameAndPassword(job.getUsername(), job.getPassword());
         if (byUserPass == null)
             throw new ExpertException("wrong username or password");
+        if (!byUserPass.getStatus())
+            throw new ExpertException("this expert is deactivate please tell admin to active it first");
         final Tasks task = tasksService.findByName(job.getTaskName());
         final SubTasks subTask = subTasksService.findByName(job.getSubTaskName());
         final List<Tasks> tasks = byUserPass.getTasks();
