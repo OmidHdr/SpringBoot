@@ -1,5 +1,6 @@
 package com.example.springboot.services;
 
+import com.example.springboot.dto.SubtaskEdit;
 import com.example.springboot.entity.SubTasks;
 import com.example.springboot.entity.Tasks;
 import com.example.springboot.exeption.SubTasksException;
@@ -51,6 +52,20 @@ public class SubTasksimpl implements SubTaskServices {
             throw new SubTasksException("wrong subtask name");
         return byName;
 
+    }
+
+    //section edit Subtask
+    @Override
+    public SubTasks editSubTask(SubtaskEdit sub) throws SubTasksException {
+        if (sub.getName() == null || sub.getNewName() == null || sub.getNewDescription() == null || sub.getNewBasePrice() == null)
+            throw new SubTasksException("you should fill all of the items");
+        final SubTasks byName = repository.findByName(sub.getName());
+        if (byName == null)
+            throw new SubTasksException("this Subtask dose not exist");
+        byName.setName(sub.getNewName());
+        byName.setDescription(sub.getNewDescription());
+        byName.setBasePrice(sub.getNewBasePrice());
+        return repository.save(byName);
     }
 
 

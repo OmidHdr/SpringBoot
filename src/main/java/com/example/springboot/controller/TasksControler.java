@@ -1,5 +1,6 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.TaskEdit;
 import com.example.springboot.entity.Tasks;
 import com.example.springboot.exeption.TasksException;
 import com.example.springboot.services.TasksServices;
@@ -29,4 +30,8 @@ public class TasksControler {
         return services.allTasks();
     }
 
+    @PostMapping("/editTask")
+    public Tasks editTask(@RequestBody TaskEdit task) throws TasksException {
+        return services.editTask(task);
+    }
 }

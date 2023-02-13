@@ -1,5 +1,6 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.ChangePassword;
 import com.example.springboot.dto.ReguestJob;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.entity.SubTasks;
@@ -32,7 +33,7 @@ public class ExpertControler {
     //section login Expert
     @GetMapping("/loginExpert")
     public Expert getExpert(@RequestBody Expert expert) throws ExpertException {
-        return expertService.findByUsernameAndPassword(expert);
+        return expertService.findByUsernameAndPassword(expert.getUsername(),expert.getPassword());
     }
     //section confirm expert
     @PostMapping("/confirmExpert")
@@ -46,8 +47,8 @@ public class ExpertControler {
     }
     //section change Pass
     @PostMapping("/changePasswordExpert")
-    public Expert changePasswordExpert(@RequestBody Expert expert,String newPassword) throws ExpertException {
-        return expertService.changePassword(expert,newPassword);
+    public Expert changePasswordExpert(@RequestBody ChangePassword changePassword) throws ExpertException {
+        return expertService.changePassword(changePassword);
     }
     @PostMapping("/requestJob")
     public Expert requestNewJob(@RequestBody ReguestJob job) throws ExpertException, SubTasksException, TasksException {

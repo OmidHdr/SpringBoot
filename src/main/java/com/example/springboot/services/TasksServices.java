@@ -1,5 +1,6 @@
 package com.example.springboot.services;
 
+import com.example.springboot.dto.TaskEdit;
 import com.example.springboot.entity.Tasks;
 import com.example.springboot.exeption.TasksException;
 
@@ -11,4 +12,5 @@ public interface TasksServices {
 
     Tasks findByName(String name) throws TasksException;
 
+    Tasks editTask(TaskEdit task) throws TasksException;
 }

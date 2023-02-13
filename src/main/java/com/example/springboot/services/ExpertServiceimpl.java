@@ -1,5 +1,6 @@
 package com.example.springboot.services;
 
+import com.example.springboot.dto.ChangePassword;
 import com.example.springboot.dto.ReguestJob;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.entity.SubTasks;
@@ -66,10 +67,10 @@ public class ExpertServiceimpl implements ExpertService {
 
     //section login
     @Override
-    public Expert findByUsernameAndPassword(Expert e) throws ExpertException {
-        final Expert expert = expertRepository.findByUsernameAndPassword(e.getUsername(), e.getPassword());
+    public Expert findByUsernameAndPassword(String username, String password) throws ExpertException {
+        final Expert expert = expertRepository.findByUsernameAndPassword(username,password);
         if (expert == null)
-            throw new ExpertException("Expert not found");
+            throw new ExpertException("wrong username or password");
         if (!expert.getStatus())
             throw new ExpertException("this expert is deactivate first admin should confirm");
         return expert;
@@ -110,13 +111,13 @@ public class ExpertServiceimpl implements ExpertService {
 
     //    section password
     @Override
-    public Expert changePassword(Expert e, String newPassword) throws ExpertException {
-        if (newPassword == null)
-            throw new ExpertException("New password is Null");
-        if (!Validation.validPassword(newPassword))
+    public Expert changePassword(ChangePassword changePassword) throws ExpertException {
+        if (changePassword.getPassword() == null || changePassword.getUsername() == null || changePassword.getNewPassword() == null)
+            throw new ExpertException("you should fill all of the items");
+        if (!Validation.validPassword(changePassword.getNewPassword()))
             throw new ExpertException("password should have at least a capital Letter and a minimal Letter and 8 character");
-        final Expert byUsername = findByUsernameAndPassword(e);
-        byUsername.setPassword(newPassword);
+        Expert byUsername = findByUsernameAndPassword(changePassword.getUsername(), changePassword.getPassword());
+        byUsername.setPassword(changePassword.getNewPassword());
         return expertRepository.save(byUsername);
     }
 
