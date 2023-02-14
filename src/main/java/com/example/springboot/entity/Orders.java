@@ -43,7 +43,7 @@ public class Orders {
 
     String opinion;
 
-    @ManyToMany
-    Set<SubTasks> subTasks;
+    @ManyToOne
+    SubTasks subTasks;
 
 }

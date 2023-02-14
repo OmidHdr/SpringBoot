@@ -14,5 +14,6 @@ public class SaveOrder {
     String subtaskName;
     String description;
     String address;
+    String startDate;
     Long priceSuggestion;
 }
