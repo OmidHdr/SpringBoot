@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -37,13 +38,10 @@ public class Orders {
     @Column(nullable = false)
     JobStatus jobStatus;
 
-    @OneToOne
-    Offers offer;
+    @OneToMany
+    List<Offers> offer;
 
     String opinion;
-
-    @ManyToMany
-    Set<Tasks> tasks;
 
     @ManyToMany
     Set<SubTasks> subTasks;

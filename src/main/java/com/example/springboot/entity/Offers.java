@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-
 @Setter
 @Getter
 @AllArgsConstructor
@@ -18,12 +16,8 @@ public class Offers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     Long id;
-    LocalDate date = LocalDate.now();
-
-    @ManyToOne
-    Orders orders;
-
-    Long customerSuggestion;
-    Long expertSuggestion;
-
+    String date ;
+    Long suggestion;
+    String periodOfTime;
+    boolean status;
 }

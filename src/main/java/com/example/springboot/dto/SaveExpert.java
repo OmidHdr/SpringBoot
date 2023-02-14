@@ -8,7 +8,11 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RemoveExpertFromSubService {
+public class SaveExpert {
+    String firstName;
+    String lastName;
+    String email;
     String username;
-    String subtaskName;
+    String password;
+    String subTaskName;
 }

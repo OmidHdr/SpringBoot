@@ -22,10 +22,6 @@ public class Expert extends Account{
 
     @JoinColumn(nullable = false)
     @ManyToMany
-    List<Tasks> tasks;
-
-    @JoinColumn(nullable = false)
-    @ManyToMany
     List<SubTasks> subTasks;
 
 }

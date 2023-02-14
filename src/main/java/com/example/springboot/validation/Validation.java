@@ -1,6 +1,7 @@
 package com.example.springboot.validation;
 
 import com.github.mfathi91.time.PersianDate;
+
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -9,37 +10,35 @@ public class Validation {
 
     //section valid date
     public static boolean validDate(String dateUser) {
-        while (true) {
-            PersianDate systemDate = PersianDate.now();
-            String fromSystem = String.valueOf(systemDate);
+        PersianDate systemDate = PersianDate.now();
+        String fromSystem = String.valueOf(systemDate);
+        try {
+            String[] system = fromSystem.split("-");
+            String[] user = dateUser.split("-");
+            String systemYear = system[0];
+            String systemMonth = system[1];
+            String systemDay = system[2];
+            String userYear = user[0];
+            String userMonth = user[1];
+            String userDay = user[2];
             try {
-                String[] system = fromSystem.split("-");
-                String[] user = dateUser.split("-");
-                String systemYear = system[0];
-                String systemMonth = system[1];
-                String systemDay = system[2];
-                String userYear = user[0];
-                String userMonth = user[1];
-                String userDay = user[2];
-                try {
-                    if (Integer.parseInt(systemYear) == Integer.parseInt(userYear)) {
-                        if (Integer.parseInt(systemMonth) == Integer.parseInt(userMonth)) {
-                            if (Integer.parseInt(systemDay) < Integer.parseInt(userDay)) {
-                                return true;
-                            }
-                        } else if (Integer.parseInt(systemMonth) < Integer.parseInt(userMonth)) {
+                if (Integer.parseInt(systemYear) == Integer.parseInt(userYear)) {
+                    if (Integer.parseInt(systemMonth) == Integer.parseInt(userMonth)) {
+                        if (Integer.parseInt(systemDay) < Integer.parseInt(userDay)) {
                             return true;
                         }
-                    } else if (Integer.parseInt(systemYear) < Integer.parseInt(userYear)) {
+                    } else if (Integer.parseInt(systemMonth) < Integer.parseInt(userMonth)) {
                         return true;
                     }
-                } catch (Exception e) {
-                    return false;
+                } else if (Integer.parseInt(systemYear) < Integer.parseInt(userYear)) {
+                    return true;
                 }
-                return false;
             } catch (Exception e) {
                 return false;
             }
+            return false;
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -50,7 +49,6 @@ public class Validation {
             return true;
         return false;
     }
-
 
     //section valid Password
     public static boolean validPassword(String string) {
@@ -70,7 +68,6 @@ public class Validation {
         });
         return flag.get();
     }
-
 
     //section String
     public static boolean validString(String string) {

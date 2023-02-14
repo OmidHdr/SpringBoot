@@ -2,11 +2,14 @@ package com.example.springboot.controller;
 
 import com.example.springboot.dto.ChangePassword;
 import com.example.springboot.dto.ReguestJob;
+import com.example.springboot.dto.RemoveExpertFromSubService;
+import com.example.springboot.dto.SaveExpert;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.entity.SubTasks;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.exeption.TasksException;
+import com.example.springboot.services.ExpertService;
 import com.example.springboot.services.ExpertServiceimpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +21,7 @@ import java.util.List;
 @RestController
 public class ExpertControler {
 
-    private final ExpertServiceimpl expertService;
+    private final ExpertService expertService;
 
     public ExpertControler(ExpertServiceimpl expertService) {
         this.expertService = expertService;
@@ -26,12 +29,12 @@ public class ExpertControler {
 
     //section register Expert
     @PostMapping("/registerExpert")
-    public Expert saveExpert(@RequestBody Expert account) throws ExpertException, SubTasksException, TasksException {
+    public Expert saveExpert(@RequestBody SaveExpert account) throws ExpertException, SubTasksException, TasksException {
         return expertService.saveExpert(account);
     }
 
     //section login Expert
-    @GetMapping("/loginExpert")
+    @PostMapping("/loginExpert")
     public Expert getExpert(@RequestBody Expert expert) throws ExpertException {
         return expertService.findByUsernameAndPassword(expert.getUsername(),expert.getPassword());
     }
@@ -53,5 +56,9 @@ public class ExpertControler {
     @PostMapping("/requestJob")
     public Expert requestNewJob(@RequestBody ReguestJob job) throws ExpertException, SubTasksException, TasksException {
         return expertService.requestForNewJob(job);
+    }
+    @PostMapping("removeExpertFromSubtask")
+    public Expert removeExpertFromSubtask(@RequestBody RemoveExpertFromSubService remove) throws ExpertException, SubTasksException, TasksException {
+        return expertService.removeExpertFromSubtask(remove);
     }
 }
