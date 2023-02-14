@@ -10,10 +10,9 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ShowOrder {
-    Long id;
-    String address;
-    String description;
-    Long price;
-    String date;
+public class dtoExpert {
+
+    String firstName;
+    String lastName;
+
 }

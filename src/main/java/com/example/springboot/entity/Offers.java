@@ -8,8 +8,8 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Offers {
     @Id
@@ -19,5 +19,9 @@ public class Offers {
     String date ;
     Long suggestion;
     String periodOfTime;
+    @ManyToOne
+    Expert expert;
+    @ManyToOne
+    Orders orders;
     boolean status;
 }

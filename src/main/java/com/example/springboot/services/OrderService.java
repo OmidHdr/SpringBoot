@@ -1,5 +1,6 @@
 package com.example.springboot.services;
 
+import com.example.springboot.dto.SaveOffer;
 import com.example.springboot.dto.SaveOrder;
 import com.example.springboot.dto.ShowOrder;
 import com.example.springboot.entity.Orders;
@@ -13,4 +14,6 @@ import java.util.List;
 public interface OrderService {
     Orders saveOrder(SaveOrder orders) throws OrderException, CustomerException, SubTasksException;
     List<ShowOrder> jobforExpert(SaveOrder order) throws OrderException, ExpertException, SubTasksException;
+
+    ShowOrder confirmJob(SaveOffer offer) throws OrderException, ExpertException, SubTasksException;
 }

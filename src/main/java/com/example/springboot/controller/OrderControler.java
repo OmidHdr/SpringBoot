@@ -1,5 +1,6 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.SaveOffer;
 import com.example.springboot.dto.SaveOrder;
 import com.example.springboot.dto.ShowOrder;
 import com.example.springboot.entity.Orders;
@@ -8,6 +9,7 @@ import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.exeption.OrderException;
 import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.services.OrderService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,4 +35,8 @@ public class OrderControler {
         return orderService.jobforExpert(order);
     }
 
+    @PostMapping("/confirmJob")
+    public ShowOrder confirmJob(@RequestBody SaveOffer offer) throws ExpertException, SubTasksException, OrderException {
+        return orderService.confirmJob(offer);
+    }
 }
