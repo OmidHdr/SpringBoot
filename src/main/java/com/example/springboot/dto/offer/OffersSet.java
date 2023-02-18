@@ -1,5 +1,6 @@
-package com.example.springboot.dto;
+package com.example.springboot.dto.offer;
 
+import com.example.springboot.dto.expert.ExpertGet;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,10 +11,10 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ShowOrder {
+public class OffersSet {
     Long id;
-    String address;
-    String description;
-    Long price;
     String date;
+    String periodOfTime;
+    Long suggestion;
+    ExpertGet expert;
 }

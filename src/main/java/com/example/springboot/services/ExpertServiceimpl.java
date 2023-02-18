@@ -1,6 +1,7 @@
 package com.example.springboot.services;
 
 import com.example.springboot.dto.*;
+import com.example.springboot.dto.expert.ExpertSet;
 import com.example.springboot.entity.Enum.UserRole;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.entity.SubTasks;
@@ -33,7 +34,7 @@ public class ExpertServiceimpl implements ExpertService {
 
     //section register
     @Override
-    public void saveExpert(GetExpert account) throws ExpertException, TasksException, SubTasksException {
+    public Expert saveExpert(ExpertSet account) throws ExpertException, TasksException, SubTasksException {
         if (account.getFirstName() == null || account.getPassword() == null || !Validation.validString(account.getFirstName()) || !Validation.validString(account.getLastName()))
             throw new ExpertException("wrong firstname or lastname !!");
         if (account.getPassword() == null || !Validation.validPassword(account.getPassword()))
@@ -50,7 +51,7 @@ public class ExpertServiceimpl implements ExpertService {
                 .password(account.getPassword()).userRole(UserRole.EXPERT).inventory(0)
                 .status(false).subTasks(Collections.singletonList(subtask)).build();
         try {
-            expertRepository.save(expert);
+            return expertRepository.save(expert);
         } catch (Exception e) {
             throw new ExpertException("Failed to save expert ! ");
         }
@@ -125,13 +126,13 @@ public class ExpertServiceimpl implements ExpertService {
     }
 
     //section showUnconfirmed
-    public List<GetExpert> showUnconfirmExpert() throws ExpertException {
+    public List<ExpertSet> showUnconfirmExpert() throws ExpertException {
         final List<Expert> allByStatus = expertRepository.findAllByStatus(false);
         if (allByStatus.size() < 1)
             throw new ExpertException("there is no expert to confirm");
-        List<GetExpert> result = new ArrayList<>();
+        List<ExpertSet> result = new ArrayList<>();
         allByStatus.forEach(expert -> {
-            GetExpert e = GetExpert.builder().firstName(expert.getFirstName()).lastName(expert.getLastName())
+            ExpertSet e = ExpertSet.builder().firstName(expert.getFirstName()).lastName(expert.getLastName())
                     .email(expert.getEmail()).username(expert.getUsername())
                     .build();
             result.add(e);

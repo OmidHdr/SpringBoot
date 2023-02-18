@@ -1,4 +1,4 @@
-package com.example.springboot.dto;
+package com.example.springboot.dto.expert;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,10 +10,11 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SetOffer {
-    Long id;
-    String date;
-    String periodOfTime;
-    Long suggestion;
-    SaveExpert expert;
+public class ExpertSet {
+    String firstName;
+    String lastName;
+    String email;
+    String subTaskName;
+    String username;
+    String password;
 }

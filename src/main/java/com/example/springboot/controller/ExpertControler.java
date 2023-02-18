@@ -1,32 +1,37 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.dto.*;
+import com.example.springboot.dto.ChangePassword;
+import com.example.springboot.dto.expert.ExpertSet;
+import com.example.springboot.dto.ReguestJob;
+import com.example.springboot.dto.RemoveExpertFromSubService;
 import com.example.springboot.entity.Expert;
-import com.example.springboot.entity.SubTasks;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.exeption.TasksException;
+import com.example.springboot.repository.ExpertRepository;
 import com.example.springboot.services.ExpertService;
 import com.example.springboot.services.ExpertServiceimpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
+
 
 @RestController
 public class ExpertControler {
 
     private final ExpertService expertService;
+    private final ExpertRepository repository;
 
-    public ExpertControler(ExpertServiceimpl expertService) {
+    public ExpertControler(ExpertServiceimpl expertService, ExpertRepository repository) {
         this.expertService = expertService;
+        this.repository = repository;
     }
 
     //section register Expert
     @PostMapping("/registerExpert")
-    public void saveExpert(@RequestBody GetExpert account) throws ExpertException, SubTasksException, TasksException {
+    public void saveExpert(@RequestBody ExpertSet account) throws ExpertException, SubTasksException, TasksException {
         expertService.saveExpert(account);
     }
 
@@ -35,6 +40,7 @@ public class ExpertControler {
     public Expert getExpert(@RequestBody Expert expert) throws ExpertException {
         return expertService.findByUsernameAndPassword(expert.getUsername(),expert.getPassword());
     }
+
     //section confirm expert
     @PostMapping("/confirmExpert")
     public void confirmExpert(@RequestBody Expert expert) throws ExpertException {
@@ -42,7 +48,7 @@ public class ExpertControler {
     }
     //section show unConfirm
     @GetMapping("/showUnconfirmExpert")
-    public List<GetExpert> showUnconfirmExpert() throws ExpertException {
+    public List<ExpertSet> showUnconfirmExpert() throws ExpertException {
         return expertService.showUnconfirmExpert();
     }
     //section change Pass

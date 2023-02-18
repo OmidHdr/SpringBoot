@@ -1,11 +1,6 @@
 package com.example.springboot.services;
 
-import com.example.springboot.dto.GetOffers;
 import com.example.springboot.entity.Offers;
-import com.example.springboot.entity.Orders;
-import com.example.springboot.exeption.CustomerException;
-import com.example.springboot.exeption.OfferException;
-import com.example.springboot.exeption.OrderException;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;

@@ -20,16 +20,19 @@ public class TasksControler {
         this.services = services;
     }
 
+    //section save
     @PostMapping("/saveTasks")
     public Tasks saveService(@RequestBody Tasks service) throws TasksException {
         return services.saveTask(service);
     }
 
+    //section get all task
     @GetMapping("/getAlltasks")
     public List<Tasks> allTasks() {
         return services.allTasks();
     }
 
+    //section edit task
     @PostMapping("/editTask")
     public Tasks editTask(@RequestBody TaskEdit task) throws TasksException {
         return services.editTask(task);

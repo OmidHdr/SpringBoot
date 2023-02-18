@@ -1,7 +1,7 @@
 package com.example.springboot.services;
 
 import com.example.springboot.dto.SubtaskEdit;
-import com.example.springboot.dto.dtoSubTasks;
+import com.example.springboot.dto.SubTaskDto;
 import com.example.springboot.entity.SubTasks;
 import com.example.springboot.entity.Tasks;
 import com.example.springboot.exeption.SubTasksException;
@@ -42,13 +42,13 @@ public class SubTasksimpl implements SubTaskServices {
 
     //section all subtask
     @Override
-    public List<dtoSubTasks> allSubTasks() throws SubTasksException {
+    public List<SubTaskDto> allSubTasks() throws SubTasksException {
         final List<SubTasks> all = repository.findAll();
         if (all == null)
             throw new SubTasksException("there is No result");
-        List<dtoSubTasks> result = new ArrayList<>();
+        List<SubTaskDto> result = new ArrayList<>();
         for (int i = 0; i < all.size(); i++) {
-            dtoSubTasks subTasks = dtoSubTasks.builder().name(all.get(i).getName())
+            SubTaskDto subTasks = SubTaskDto.builder().name(all.get(i).getName())
                             .description(all.get(i).getDescription())
                             .basePrice(all.get(i).getBasePrice())
                             .id(all.get(i).getId()).build();

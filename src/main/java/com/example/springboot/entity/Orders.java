@@ -38,7 +38,7 @@ public class Orders {
     @Column(nullable = false)
     JobStatus jobStatus;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orders",fetch = FetchType.LAZY)
     List<Offers> offer;
 
     String opinion;

@@ -1,6 +1,10 @@
 package com.example.springboot.services;
 
-import com.example.springboot.dto.*;
+import com.example.springboot.dto.offer.OffersGet;
+import com.example.springboot.dto.offer.OffersSave;
+import com.example.springboot.dto.offer.OffersSet;
+import com.example.springboot.dto.order.OrderSave;
+import com.example.springboot.dto.order.OrderShow;
 import com.example.springboot.entity.*;
 import com.example.springboot.entity.Enum.JobStatus;
 import com.example.springboot.exeption.*;
@@ -10,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class OrderServiceimpl implements OrderService {
@@ -31,7 +34,7 @@ public class OrderServiceimpl implements OrderService {
 
     //section save order
     @Override
-    public void saveOrder(SaveOrder order) throws OrderException, CustomerException, SubTasksException {
+    public void saveOrder(OrderSave order) throws OrderException, CustomerException, SubTasksException {
         if (order.getUsername() == null || order.getPassword() == null ||
                 order.getDescription() == null || order.getSubtaskName() == null ||
                 order.getPriceSuggestion() == null || order.getAddress() == null)
@@ -64,7 +67,7 @@ public class OrderServiceimpl implements OrderService {
 
     //section job for expert
     @Override
-    public List<ShowOrder> jobforExpert(SaveOrder order) throws OrderException, ExpertException, SubTasksException {
+    public List<OrderShow> jobforExpert(OrderSave order) throws OrderException, ExpertException, SubTasksException {
         if (order.getUsername() == null || order.getPassword() == null || order.getSubtaskName() == null)
             throw new OrderException("you should fill all of the items");
         final Expert expert = expertService.findByUsernameAndPassword(order.getUsername(), order.getPassword());
@@ -75,34 +78,34 @@ public class OrderServiceimpl implements OrderService {
         final List<SubTasks> subExpert = expert.getSubTasks();
         if (!expertAccess(subExpert, subtask))
             throw new OrderException("you do not have access to see this result ");
-        List<ShowOrder> result = new ArrayList<>();
+        List<OrderShow> result = new ArrayList<>();
         listOrders.forEach(orders -> {
-            ShowOrder showOrder = ShowOrder.builder()
+            OrderShow orderShow = OrderShow.builder()
                     .address(orders.getAddress())
                     .price(orders.getProposedPrice())
                     .description(orders.getDescription())
                     .date(orders.getStartDate())
                     .id(orders.getId())
                     .build();
-            result.add(showOrder);
+            result.add(orderShow);
         });
         return result;
     }
 
     //section confirm job
     @Override
-    public ShowOrder confirmJob(SaveOffer offer) throws OrderException, ExpertException, SubTasksException {
+    public OrderShow confirmJob(OffersSave offer) throws OrderException, ExpertException, SubTasksException {
         if (offer.getUsername() == null || offer.getPassword() == null || offer.getSubtaskName() == null || offer.getOfferId() == null)
             throw new OrderException("you should fill all of the items");
 
         Expert expert = expertService.findByUsernameAndPassword(offer.getUsername(), offer.getPassword());
-        SaveOrder saveOrder = SaveOrder.builder()
+        OrderSave orderSave = OrderSave.builder()
                 .username(offer.getUsername()).password(offer.getPassword())
                 .subtaskName(offer.getSubtaskName()).build();
         final Optional<Orders> order = orderRepository.findById(offer.getOfferId());
-        final List<ShowOrder> showOrders = jobforExpert(saveOrder);
-        for (int i = 0; i < showOrders.size(); i++) {
-            if (Objects.equals(showOrders.get(i).getId(), offer.getOfferId())) {
+        final List<OrderShow> orderShows = jobforExpert(orderSave);
+        for (int i = 0; i < orderShows.size(); i++) {
+            if (Objects.equals(orderShows.get(i).getId(), offer.getOfferId())) {
                 final Optional<Orders> byId = orderRepository.findById(offer.getOfferId());
                 final Orders orders = byId.get();
                 Offers offers = Offers.builder()
@@ -111,7 +114,7 @@ public class OrderServiceimpl implements OrderService {
                         .build();
                 orders.setOffer(Collections.singletonList(offers));
                 offerService.saveOffers(offers);
-                return showOrders.get(i);
+                return orderShows.get(i);
             }
         }
         throw new OrderException("failed to do");
@@ -127,7 +130,7 @@ public class OrderServiceimpl implements OrderService {
 
     //section get all suggestion
     @Override
-    public List<SetOffer> getAllExpertSuggestions(GetOffers offer) throws OfferException, CustomerException, SubTasksException, OrderException {
+    public List<OffersSet> getAllExpertSuggestions(OffersGet offer) throws OfferException, CustomerException, SubTasksException, OrderException {
         // check offer is not null
         if (offer.getUsername() == null || offer.getPassword() == null ||
                 offer.getSubtaskName() == null || offer.getOrderId() == null)

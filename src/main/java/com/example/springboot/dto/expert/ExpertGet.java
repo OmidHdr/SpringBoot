@@ -1,5 +1,7 @@
-package com.example.springboot.dto;
+package com.example.springboot.dto.expert;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,9 +12,10 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SaveExpert {
+public class ExpertGet {
     Long id;
     String firstName;
     String lastName;
+    @Email
     String email;
 }

@@ -1,4 +1,4 @@
-package com.example.springboot.dto;
+package com.example.springboot.dto.order;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,9 +10,10 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class GetOffers {
-    String username;
-    String password;
-    String subtaskName;
-    Long orderId;
+public class OrderShow {
+    Long id;
+    String address;
+    String description;
+    Long price;
+    String date;
 }

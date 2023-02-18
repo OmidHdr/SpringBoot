@@ -10,12 +10,9 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SaveOffer {
-    Long offerId;
-    String username;
-    String password;
-    String subtaskName;
-    Long suggestion;
-    String timeStart;
-    String periodOfTime;
+public class SubTaskDto {
+    Long id;
+    String name;
+    String description;
+    Long basePrice;
 }
