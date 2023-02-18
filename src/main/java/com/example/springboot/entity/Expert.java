@@ -21,7 +21,7 @@ public class Expert extends Account{
     byte[] image;
 
     @JoinColumn(nullable = false)
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     List<SubTasks> subTasks;
 
 }

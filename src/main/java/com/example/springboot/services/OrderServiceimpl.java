@@ -1,20 +1,16 @@
 package com.example.springboot.services;
 
-import com.example.springboot.dto.SaveOffer;
-import com.example.springboot.dto.SaveOrder;
-import com.example.springboot.dto.ShowOrder;
+import com.example.springboot.dto.*;
 import com.example.springboot.entity.*;
 import com.example.springboot.entity.Enum.JobStatus;
-import com.example.springboot.exeption.CustomerException;
-import com.example.springboot.exeption.ExpertException;
-import com.example.springboot.exeption.OrderException;
-import com.example.springboot.exeption.SubTasksException;
+import com.example.springboot.exeption.*;
 import com.example.springboot.repository.OrderRepository;
 import com.example.springboot.validation.Validation;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class OrderServiceimpl implements OrderService {
@@ -35,7 +31,7 @@ public class OrderServiceimpl implements OrderService {
 
     //section save order
     @Override
-    public Orders saveOrder(SaveOrder order) throws OrderException, CustomerException, SubTasksException {
+    public void saveOrder(SaveOrder order) throws OrderException, CustomerException, SubTasksException {
         if (order.getUsername() == null || order.getPassword() == null ||
                 order.getDescription() == null || order.getSubtaskName() == null ||
                 order.getPriceSuggestion() == null || order.getAddress() == null)
@@ -53,7 +49,7 @@ public class OrderServiceimpl implements OrderService {
                 .address(order.getAddress())
                 .jobStatus(JobStatus.WAITING_FOR_EXPERT)
                 .subTasks(subtask).build();
-        return orderRepository.save(orders);
+        orderRepository.save(orders);
     }
 
     //section check expert exist
@@ -101,16 +97,17 @@ public class OrderServiceimpl implements OrderService {
 
         Expert expert = expertService.findByUsernameAndPassword(offer.getUsername(), offer.getPassword());
         SaveOrder saveOrder = SaveOrder.builder()
-                        .username(offer.getUsername()).password(offer.getPassword())
-                        .subtaskName(offer.getSubtaskName()).build();
+                .username(offer.getUsername()).password(offer.getPassword())
+                .subtaskName(offer.getSubtaskName()).build();
+        final Optional<Orders> order = orderRepository.findById(offer.getOfferId());
         final List<ShowOrder> showOrders = jobforExpert(saveOrder);
         for (int i = 0; i < showOrders.size(); i++) {
-            if (Objects.equals(showOrders.get(i).getId(), offer.getOfferId())){
+            if (Objects.equals(showOrders.get(i).getId(), offer.getOfferId())) {
                 final Optional<Orders> byId = orderRepository.findById(offer.getOfferId());
                 final Orders orders = byId.get();
                 Offers offers = Offers.builder()
-                                .suggestion(offer.getSuggestion()).date(offer.getTimeStart())
-                                .periodOfTime(offer.getPeriodOfTime()).expert(expert).orders(orders)
+                        .suggestion(offer.getSuggestion()).date(offer.getTimeStart())
+                        .periodOfTime(offer.getPeriodOfTime()).expert(expert).orders(order.get())
                         .build();
                 orders.setOffer(Collections.singletonList(offers));
                 offerService.saveOffers(offers);
@@ -119,6 +116,8 @@ public class OrderServiceimpl implements OrderService {
         }
         throw new OrderException("failed to do");
     }
+
+    @Override
     public Optional<Orders> findById(Long offerId) throws OrderException {
         final Optional<Orders> byId = orderRepository.findById(offerId);
         if (!byId.isPresent())
@@ -126,4 +125,49 @@ public class OrderServiceimpl implements OrderService {
         return byId;
     }
 
+    //section get all suggestion
+    @Override
+    public List<SetOffer> getAllExpertSuggestions(GetOffers offer) throws OfferException, CustomerException, SubTasksException, OrderException {
+        // check offer is not null
+        if (offer.getUsername() == null || offer.getPassword() == null ||
+                offer.getSubtaskName() == null || offer.getOrderId() == null)
+            throw new OfferException("you should fill all of the items ");
+        // find customer
+        final Customer customer = customerService.findByUsernameAndPassword(offer.getUsername(), offer.getPassword());
+        // find sub task
+        final SubTasks subtask = subTaskServices.findByName(offer.getSubtaskName());
+        // find order
+        final List<Orders> orders = orderRepository.findByCustomerAndSubTasks(customer, subtask);
+        if (orders == null)
+            throw new OrderException("there is no order");
+        // find offer
+        for (int i = 0; i < orders.size(); i++) {
+            if (Objects.equals(orders.get(i).getId(), offer.getOrderId())) {
+                final List<Offers> offers = offerService.findByOrders(offer.getOrderId());
+                System.out.println(offers);
+            }
+
+        /*
+        List<SetOffer> result = new ArrayList<>();
+        for (int i = 0; i < orders.size(); i++) {
+            if (Objects.equals(orders.get(i).getId(), offer.getOrderId())) {
+                for (int j = 0; j < orders.get(i).getOffer().size(); j++) {
+                    SaveExpert e = SaveExpert.builder()
+                            .firstName(orders.get(i).getOffer().get(j).getExpert().getFirstName())
+                            .lastName(orders.get(i).getOffer().get(j).getExpert().getLastName())
+                            .email(orders.get(i).getOffer().get(j).getExpert().getEmail())
+                            .id(orders.get(i).getOffer().get(j).getExpert().getId()).build();
+                    SetOffer o = SetOffer.builder()
+                             .id(orders.get(i).getOffer().get(j).getId())
+                             .date(orders.get(i).getOffer().get(j).getDate())
+                             .suggestion(orders.get(i).getOffer().get(j).getSuggestion())
+                             .periodOfTime(orders.get(i).getOffer().get(j).getPeriodOfTime()).expert(e).build();
+                     result.add(o);
+                }
+            }
+        }
+        */
+        }
+        return null;
+    }
 }

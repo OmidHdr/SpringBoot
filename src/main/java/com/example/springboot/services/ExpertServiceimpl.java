@@ -1,9 +1,6 @@
 package com.example.springboot.services;
 
-import com.example.springboot.dto.ChangePassword;
-import com.example.springboot.dto.ReguestJob;
-import com.example.springboot.dto.RemoveExpertFromSubService;
-import com.example.springboot.dto.SaveExpert;
+import com.example.springboot.dto.*;
 import com.example.springboot.entity.Enum.UserRole;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.entity.SubTasks;
@@ -16,6 +13,7 @@ import com.example.springboot.validation.Validation;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +33,7 @@ public class ExpertServiceimpl implements ExpertService {
 
     //section register
     @Override
-    public Expert saveExpert(SaveExpert account) throws ExpertException, TasksException, SubTasksException {
+    public void saveExpert(GetExpert account) throws ExpertException, TasksException, SubTasksException {
         if (account.getFirstName() == null || account.getPassword() == null || !Validation.validString(account.getFirstName()) || !Validation.validString(account.getLastName()))
             throw new ExpertException("wrong firstname or lastname !!");
         if (account.getPassword() == null || !Validation.validPassword(account.getPassword()))
@@ -52,7 +50,7 @@ public class ExpertServiceimpl implements ExpertService {
                 .password(account.getPassword()).userRole(UserRole.EXPERT).inventory(0)
                 .status(false).subTasks(Collections.singletonList(subtask)).build();
         try {
-            return expertRepository.save(expert);
+            expertRepository.save(expert);
         } catch (Exception e) {
             throw new ExpertException("Failed to save expert ! ");
         }
@@ -66,17 +64,31 @@ public class ExpertServiceimpl implements ExpertService {
             throw new ExpertException("wrong username or password");
         if (!expert.getStatus())
             throw new ExpertException("this expert is deactivate first admin should confirm");
-        return expert;
+        List<SubTasks> listSub = new ArrayList<>();
+        for (int i = 0; i < expert.getSubTasks().size(); i++) {
+            Tasks task = Tasks.builder().id(expert.getSubTasks().get(i).getTask().getId())
+                    .name(expert.getSubTasks().get(i).getTask().getName()).build();
+            SubTasks subTasks = SubTasks.builder().id(expert.getSubTasks().get(i).getId())
+                    .name(expert.getSubTasks().get(i).getName()).task(task)
+                    .basePrice(expert.getSubTasks().get(i).getBasePrice())
+                    .description(expert.getSubTasks().get(i).getDescription()).build();
+            listSub.add(subTasks);
+        }
+        Expert result = Expert.builder().id(expert.getId()).firstName(expert.getFirstName()).lastName(expert.getLastName())
+                .email(expert.getEmail()).inventory(expert.getInventory()).subTasks(listSub)
+                .date(expert.getDate()).username(expert.getUsername()).password(expert.getPassword())
+                .userRole(expert.getUserRole()).status(expert.getStatus()).build();
+        return result;
     }
 
     //section confirm
     @Override
-    public Expert confirmExpert(Expert expert) throws ExpertException {
+    public void confirmExpert(Expert expert) throws ExpertException {
         final Expert byUsername = expertRepository.findByUsername(expert.getUsername());
         if (byUsername == null)
             throw new ExpertException("dear admin please give expert username");
         byUsername.setStatus(true);
-        return expertRepository.save(byUsername);
+        expertRepository.save(byUsername);
     }
 
     //section reguest job
@@ -102,27 +114,34 @@ public class ExpertServiceimpl implements ExpertService {
 
     //    section password
     @Override
-    public Expert changePassword(ChangePassword changePassword) throws ExpertException {
+    public void changePassword(ChangePassword changePassword) throws ExpertException {
         if (changePassword.getPassword() == null || changePassword.getUsername() == null || changePassword.getNewPassword() == null)
             throw new ExpertException("you should fill all of the items");
         if (!Validation.validPassword(changePassword.getNewPassword()))
             throw new ExpertException("password should have at least a capital Letter and a minimal Letter and 8 character");
         Expert byUsername = findByUsernameAndPassword(changePassword.getUsername(), changePassword.getPassword());
         byUsername.setPassword(changePassword.getNewPassword());
-        return expertRepository.save(byUsername);
+        expertRepository.save(byUsername);
     }
 
     //section showUnconfirmed
-    public List<Expert> showUnconfirmExpert() throws ExpertException {
+    public List<GetExpert> showUnconfirmExpert() throws ExpertException {
         final List<Expert> allByStatus = expertRepository.findAllByStatus(false);
         if (allByStatus.size() < 1)
             throw new ExpertException("there is no expert to confirm");
-        return allByStatus;
+        List<GetExpert> result = new ArrayList<>();
+        allByStatus.forEach(expert -> {
+            GetExpert e = GetExpert.builder().firstName(expert.getFirstName()).lastName(expert.getLastName())
+                    .email(expert.getEmail()).username(expert.getUsername())
+                    .build();
+            result.add(e);
+        });
+        return result;
     }
 
     //section removeSubService
     @Override
-    public Expert removeExpertFromSubtask(RemoveExpertFromSubService remove) throws ExpertException, SubTasksException, TasksException {
+    public void removeExpertFromSubtask(RemoveExpertFromSubService remove) throws ExpertException, SubTasksException, TasksException {
         if (remove.getUsername() == null || remove.getSubtaskName() == null)
             throw new ExpertException("you should fill all of the items");
         Expert expert = expertRepository.findByUsername(remove.getUsername());
@@ -138,7 +157,7 @@ public class ExpertServiceimpl implements ExpertService {
             }
         }
         expert.setSubTasks(subTasks);
-        return expertRepository.save(expert);
+        expertRepository.save(expert);
     }
 
 }

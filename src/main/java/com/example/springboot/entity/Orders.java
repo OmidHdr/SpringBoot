@@ -22,7 +22,7 @@ public class Orders {
     @Column(name = "id", nullable = false)
     Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     Customer customer;
 
     String description;
@@ -38,12 +38,12 @@ public class Orders {
     @Column(nullable = false)
     JobStatus jobStatus;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     List<Offers> offer;
 
     String opinion;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     SubTasks subTasks;
 
 }

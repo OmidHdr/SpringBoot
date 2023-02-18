@@ -10,9 +10,9 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SaveExpert {
-    Long id;
-    String firstName;
-    String lastName;
-    String email;
+public class GetOffers {
+    String username;
+    String password;
+    String subtaskName;
+    Long orderId;
 }

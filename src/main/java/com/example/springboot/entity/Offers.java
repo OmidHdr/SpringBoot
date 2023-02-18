@@ -19,9 +19,8 @@ public class Offers {
     String date ;
     Long suggestion;
     String periodOfTime;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     Expert expert;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     Orders orders;
-    boolean status;
 }

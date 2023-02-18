@@ -1,16 +1,11 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.dto.SaveOffer;
-import com.example.springboot.dto.SaveOrder;
-import com.example.springboot.dto.ShowOrder;
+import com.example.springboot.dto.*;
+import com.example.springboot.entity.Offers;
 import com.example.springboot.entity.Orders;
-import com.example.springboot.exeption.CustomerException;
-import com.example.springboot.exeption.ExpertException;
-import com.example.springboot.exeption.OrderException;
-import com.example.springboot.exeption.SubTasksException;
+import com.example.springboot.exeption.*;
+import com.example.springboot.services.OfferService;
 import com.example.springboot.services.OrderService;
-import org.aspectj.weaver.ast.Or;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,22 +16,31 @@ import java.util.List;
 public class OrderControler {
 
     private final OrderService orderService;
+    private final OfferService offerService;
 
-    public OrderControler(OrderService orderService) {
+    public OrderControler(OrderService orderService, OfferService offerService) {
         this.orderService = orderService;
+        this.offerService = offerService;
     }
 
     @PostMapping("/sendOrder")
-    public Orders sendOrder(@RequestBody SaveOrder order) throws CustomerException, SubTasksException, OrderException {
-        return orderService.saveOrder(order);
+    public void sendOrder(@RequestBody SaveOrder order) throws CustomerException, SubTasksException, OrderException {
+        orderService.saveOrder(order);
     }
+    //مشاهدده لیست پینهادات
     @PostMapping("/jobforExpert")
     public List<ShowOrder> jobForExpert(@RequestBody SaveOrder order) throws ExpertException, SubTasksException, OrderException {
         return orderService.jobforExpert(order);
     }
-
-    @PostMapping("/confirmJob")
+    // ارسال پیشنهاد توسط متخصص
+    @PostMapping("/sendOfferFromExpert")
     public ShowOrder confirmJob(@RequestBody SaveOffer offer) throws ExpertException, SubTasksException, OrderException {
         return orderService.confirmJob(offer);
     }
+    // مشاهده لیست پشنهادات ارسال شده توسط متخصص ها
+    @PostMapping("/showExpertSuggestions")
+    public List<SetOffer> getAllExpertSuggestions (@RequestBody GetOffers offer) throws CustomerException, OfferException, OrderException, SubTasksException {
+        return orderService.getAllExpertSuggestions(offer);
+    }
+    // انتخاب متخصص برای سفارش توسط مشتری
 }

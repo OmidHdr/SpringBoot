@@ -21,7 +21,7 @@ public class SubTasks {
     String name;
 
     @JoinColumn(nullable = false)
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Tasks task;
 
     @Column(nullable = false)

@@ -14,5 +14,7 @@ public class dtoExpert {
 
     String firstName;
     String lastName;
+    String email;
+    Integer inventory;
 
 }

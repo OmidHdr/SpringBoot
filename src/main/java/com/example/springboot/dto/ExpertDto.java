@@ -1,18 +1,20 @@
 package com.example.springboot.dto;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Setter
 @Getter
-@Builder
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SaveExpert {
-    Long id;
+public class ExpertDto {
+
     String firstName;
     String lastName;
     String email;
+//    String subTaskName;
+    String username;
+    String password;
+
 }

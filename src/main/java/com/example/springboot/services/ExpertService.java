@@ -1,9 +1,6 @@
 package com.example.springboot.services;
 
-import com.example.springboot.dto.ChangePassword;
-import com.example.springboot.dto.ReguestJob;
-import com.example.springboot.dto.RemoveExpertFromSubService;
-import com.example.springboot.dto.SaveExpert;
+import com.example.springboot.dto.*;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.entity.SubTasks;
 import com.example.springboot.exeption.ExpertException;
@@ -13,18 +10,18 @@ import com.example.springboot.exeption.TasksException;
 import java.util.List;
 
 public interface ExpertService {
-    Expert saveExpert(SaveExpert account) throws ExpertException, TasksException, SubTasksException;
+    void saveExpert(GetExpert account) throws ExpertException, TasksException, SubTasksException;
     Expert findByUsernameAndPassword(String username, String password) throws ExpertException;
 
-    Expert confirmExpert(Expert expert) throws ExpertException;
+    void confirmExpert(Expert expert) throws ExpertException;
 
     Expert requestForNewJob(ReguestJob job) throws ExpertException, TasksException, SubTasksException;
 //    Expert removeSubServiceFromExpert(Expert expert , SubTasks sub);
 
-    Expert changePassword(ChangePassword changePassword) throws ExpertException;
+    void changePassword(ChangePassword changePassword) throws ExpertException;
 
 
-    List<Expert> showUnconfirmExpert() throws ExpertException;
+    List<GetExpert> showUnconfirmExpert() throws ExpertException;
 
-    Expert removeExpertFromSubtask(RemoveExpertFromSubService remove) throws ExpertException, SubTasksException, TasksException;
+    void removeExpertFromSubtask(RemoveExpertFromSubService remove) throws ExpertException, SubTasksException, TasksException;
 }

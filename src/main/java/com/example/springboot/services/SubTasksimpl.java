@@ -1,6 +1,7 @@
 package com.example.springboot.services;
 
 import com.example.springboot.dto.SubtaskEdit;
+import com.example.springboot.dto.dtoSubTasks;
 import com.example.springboot.entity.SubTasks;
 import com.example.springboot.entity.Tasks;
 import com.example.springboot.exeption.SubTasksException;
@@ -8,6 +9,7 @@ import com.example.springboot.repository.SubTasksRepository;
 import com.example.springboot.repository.TasksRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,8 +42,19 @@ public class SubTasksimpl implements SubTaskServices {
 
     //section all subtask
     @Override
-    public List<SubTasks> allSubTasks() {
-        return repository.findAll();
+    public List<dtoSubTasks> allSubTasks() throws SubTasksException {
+        final List<SubTasks> all = repository.findAll();
+        if (all == null)
+            throw new SubTasksException("there is No result");
+        List<dtoSubTasks> result = new ArrayList<>();
+        for (int i = 0; i < all.size(); i++) {
+            dtoSubTasks subTasks = dtoSubTasks.builder().name(all.get(i).getName())
+                            .description(all.get(i).getDescription())
+                            .basePrice(all.get(i).getBasePrice())
+                            .id(all.get(i).getId()).build();
+            result.add(subTasks);
+        }
+        return result;
     }
 
     //section find by name
@@ -56,7 +69,7 @@ public class SubTasksimpl implements SubTaskServices {
 
     //section edit Subtask
     @Override
-    public SubTasks editSubTask(SubtaskEdit sub) throws SubTasksException {
+    public void editSubTask(SubtaskEdit sub) throws SubTasksException {
         if (sub.getName() == null || sub.getNewName() == null || sub.getNewDescription() == null || sub.getNewBasePrice() == null)
             throw new SubTasksException("you should fill all of the items");
         final SubTasks byName = repository.findByName(sub.getName());
@@ -65,7 +78,7 @@ public class SubTasksimpl implements SubTaskServices {
         byName.setName(sub.getNewName());
         byName.setDescription(sub.getNewDescription());
         byName.setBasePrice(sub.getNewBasePrice());
-        return repository.save(byName);
+        repository.save(byName);
     }
 
 

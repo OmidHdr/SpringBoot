@@ -1,9 +1,6 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.dto.ChangePassword;
-import com.example.springboot.dto.ReguestJob;
-import com.example.springboot.dto.RemoveExpertFromSubService;
-import com.example.springboot.dto.SaveExpert;
+import com.example.springboot.dto.*;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.entity.SubTasks;
 import com.example.springboot.exeption.ExpertException;
@@ -29,8 +26,8 @@ public class ExpertControler {
 
     //section register Expert
     @PostMapping("/registerExpert")
-    public Expert saveExpert(@RequestBody SaveExpert account) throws ExpertException, SubTasksException, TasksException {
-        return expertService.saveExpert(account);
+    public void saveExpert(@RequestBody GetExpert account) throws ExpertException, SubTasksException, TasksException {
+        expertService.saveExpert(account);
     }
 
     //section login Expert
@@ -40,25 +37,25 @@ public class ExpertControler {
     }
     //section confirm expert
     @PostMapping("/confirmExpert")
-    public Expert confirmExpert(@RequestBody Expert expert) throws ExpertException {
-        return expertService.confirmExpert(expert);
+    public void confirmExpert(@RequestBody Expert expert) throws ExpertException {
+        expertService.confirmExpert(expert);
     }
     //section show unConfirm
     @GetMapping("/showUnconfirmExpert")
-    public List<Expert> showUnconfirmExpert() throws ExpertException {
+    public List<GetExpert> showUnconfirmExpert() throws ExpertException {
         return expertService.showUnconfirmExpert();
     }
     //section change Pass
     @PostMapping("/changePasswordExpert")
-    public Expert changePasswordExpert(@RequestBody ChangePassword changePassword) throws ExpertException {
-        return expertService.changePassword(changePassword);
+    public void changePasswordExpert(@RequestBody ChangePassword changePassword) throws ExpertException {
+        expertService.changePassword(changePassword);
     }
     @PostMapping("/requestJob")
     public Expert requestNewJob(@RequestBody ReguestJob job) throws ExpertException, SubTasksException, TasksException {
         return expertService.requestForNewJob(job);
     }
     @PostMapping("removeExpertFromSubtask")
-    public Expert removeExpertFromSubtask(@RequestBody RemoveExpertFromSubService remove) throws ExpertException, SubTasksException, TasksException {
-        return expertService.removeExpertFromSubtask(remove);
+    public void removeExpertFromSubtask(@RequestBody RemoveExpertFromSubService remove) throws ExpertException, SubTasksException, TasksException {
+        expertService.removeExpertFromSubtask(remove);
     }
 }

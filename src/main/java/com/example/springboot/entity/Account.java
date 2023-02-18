@@ -21,7 +21,6 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     Long id;
-//    @NotBlank(message = "please complete first name and try again")
     String firstName;
     String lastName;
     @Column(unique = true)

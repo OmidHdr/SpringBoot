@@ -10,9 +10,10 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SaveExpert {
+public class SetOffer {
     Long id;
-    String firstName;
-    String lastName;
-    String email;
+    String date;
+    String periodOfTime;
+    Long suggestion;
+    SaveExpert expert;
 }
