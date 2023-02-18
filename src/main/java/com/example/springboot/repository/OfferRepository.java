@@ -11,6 +11,6 @@ import java.util.List;
 public interface OfferRepository extends JpaRepository<Offers , Long> {
 
     @Query("select o from Offers o where o.orders.id=?1")
-    List<Offers> findByOrders(Long id);
+    List<Offers> findByOrderId(Long id);
 
 }

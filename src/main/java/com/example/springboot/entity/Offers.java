@@ -23,4 +23,5 @@ public class Offers {
     Expert expert;
     @ManyToOne(fetch = FetchType.LAZY)
     Orders orders;
+    boolean status;
 }

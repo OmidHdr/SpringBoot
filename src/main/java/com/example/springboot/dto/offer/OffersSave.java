@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OffersSave {
-    Long offerId;
+    Long orderId;
     String username;
     String password;
     String subtaskName;

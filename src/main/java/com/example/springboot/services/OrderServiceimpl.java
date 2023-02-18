@@ -8,6 +8,7 @@ import com.example.springboot.dto.order.OrderShow;
 import com.example.springboot.entity.*;
 import com.example.springboot.entity.Enum.JobStatus;
 import com.example.springboot.exeption.*;
+import com.example.springboot.mapper.ProductMapper;
 import com.example.springboot.repository.OrderRepository;
 import com.example.springboot.validation.Validation;
 import org.springframework.stereotype.Service;
@@ -73,8 +74,9 @@ public class OrderServiceimpl implements OrderService {
         final Expert expert = expertService.findByUsernameAndPassword(order.getUsername(), order.getPassword());
         final SubTasks subtask = subTaskServices.findByName(order.getSubtaskName());
         final List<Orders> listOrders = orderRepository.findByJobStatusAndSubTasks(JobStatus.WAITING_FOR_EXPERT, subtask);
-        if (listOrders == null)
-            throw new OrderException("there is no job ");
+        if (listOrders == null || listOrders.size() < 1)
+            throw new OrderException("you can not send offer for this order because " +
+                    "the status is not waiting for expert");
         final List<SubTasks> subExpert = expert.getSubTasks();
         if (!expertAccess(subExpert, subtask))
             throw new OrderException("you do not have access to see this result ");
@@ -95,22 +97,24 @@ public class OrderServiceimpl implements OrderService {
     //section confirm job
     @Override
     public OrderShow confirmJob(OffersSave offer) throws OrderException, ExpertException, SubTasksException {
-        if (offer.getUsername() == null || offer.getPassword() == null || offer.getSubtaskName() == null || offer.getOfferId() == null)
+        if (offer.getUsername() == null || offer.getPassword() == null || offer.getSubtaskName() == null || offer.getOrderId() == null)
             throw new OrderException("you should fill all of the items");
 
         Expert expert = expertService.findByUsernameAndPassword(offer.getUsername(), offer.getPassword());
         OrderSave orderSave = OrderSave.builder()
                 .username(offer.getUsername()).password(offer.getPassword())
                 .subtaskName(offer.getSubtaskName()).build();
-        final Optional<Orders> order = orderRepository.findById(offer.getOfferId());
+        final Orders order = orderRepository.findById(offer.getOrderId()).get();
         final List<OrderShow> orderShows = jobforExpert(orderSave);
         for (int i = 0; i < orderShows.size(); i++) {
-            if (Objects.equals(orderShows.get(i).getId(), offer.getOfferId())) {
-                final Optional<Orders> byId = orderRepository.findById(offer.getOfferId());
-                final Orders orders = byId.get();
+            if (Objects.equals(orderShows.get(i).getId(), offer.getOrderId())) {
+                final Orders orders = orderRepository.findById(offer.getOrderId()).get();
+                if (orders.getJobStatus() != JobStatus.WAITING_FOR_EXPERT)
+                    throw new OrderException("you can not send offer for this order because " +
+                            "the status is not waiting for expert");
                 Offers offers = Offers.builder()
                         .suggestion(offer.getSuggestion()).date(offer.getTimeStart())
-                        .periodOfTime(offer.getPeriodOfTime()).expert(expert).orders(order.get())
+                        .periodOfTime(offer.getPeriodOfTime()).expert(expert).orders(order)
                         .build();
                 orders.setOffer(Collections.singletonList(offers));
                 offerService.saveOffers(offers);
@@ -137,40 +141,36 @@ public class OrderServiceimpl implements OrderService {
             throw new OfferException("you should fill all of the items ");
         // find customer
         final Customer customer = customerService.findByUsernameAndPassword(offer.getUsername(), offer.getPassword());
-        // find sub task
+        // task
         final SubTasks subtask = subTaskServices.findByName(offer.getSubtaskName());
         // find order
-        final List<Orders> orders = orderRepository.findByCustomerAndSubTasks(customer, subtask);
-        if (orders == null)
-            throw new OrderException("there is no order");
+        final Optional<Orders> order = orderRepository.findById(offer.getOrderId());
+        if (!Objects.equals(order.get().getCustomer().getId(), customer.getId()))
+            throw new OrderException("sorry you cant see this result");
         // find offer
-        for (int i = 0; i < orders.size(); i++) {
-            if (Objects.equals(orders.get(i).getId(), offer.getOrderId())) {
-                final List<Offers> offers = offerService.findByOrders(offer.getOrderId());
-                System.out.println(offers);
-            }
-
-        /*
-        List<SetOffer> result = new ArrayList<>();
-        for (int i = 0; i < orders.size(); i++) {
-            if (Objects.equals(orders.get(i).getId(), offer.getOrderId())) {
-                for (int j = 0; j < orders.get(i).getOffer().size(); j++) {
-                    SaveExpert e = SaveExpert.builder()
-                            .firstName(orders.get(i).getOffer().get(j).getExpert().getFirstName())
-                            .lastName(orders.get(i).getOffer().get(j).getExpert().getLastName())
-                            .email(orders.get(i).getOffer().get(j).getExpert().getEmail())
-                            .id(orders.get(i).getOffer().get(j).getExpert().getId()).build();
-                    SetOffer o = SetOffer.builder()
-                             .id(orders.get(i).getOffer().get(j).getId())
-                             .date(orders.get(i).getOffer().get(j).getDate())
-                             .suggestion(orders.get(i).getOffer().get(j).getSuggestion())
-                             .periodOfTime(orders.get(i).getOffer().get(j).getPeriodOfTime()).expert(e).build();
-                     result.add(o);
-                }
-            }
-        }
-        */
-        }
-        return null;
+        final List<Offers> offers = offerService.findByOrders(offer.getOrderId());
+        if (offers == null)
+            throw new OrderException("there is no order");
+        final List<OffersSet> result = ProductMapper.INSTANCE.offerToDtoList(offers);
+        return result;
     }
+
+    // section confirm Order
+    @Override
+    public OrderShow confirmOrder(Long idOrder , Long idOffer) throws OrderException, OfferException {
+        if (idOrder == null || idOffer == null)
+            throw new OrderException("you should fill all of the items");
+        Orders order = orderRepository.findById(idOrder).get();
+        final Offers offer = offerService.findById(idOffer);
+        order.setJobStatus(JobStatus.EXPERT_ON_WAY);
+        offer.setStatus(true);
+        final OrderShow result = ProductMapper.INSTANCE.orderTodto(order);
+        result.setPrice(offer.getSuggestion());
+        result.setDate(offer.getDate());
+        offerService.saveOffers(offer);
+        orderRepository.save(order);
+        return result;
+    }
+
+
 }

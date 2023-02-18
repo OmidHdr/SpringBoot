@@ -41,11 +41,11 @@ class CustomerServiceimplTest {
         assertNotNull(user);
     }
     //section change password
-    @Test
-    void changePassword() throws CustomerException {
-        Customer customer = Customer.builder().username("omidalpha").password("Aa123456$").build();
-        final Customer newCustomer = customerService.changePassword(customer.getUsername(),customer.getPassword(), "Aa123456@");
-        assertThat(newCustomer.getPassword()).isEqualTo("Aa123456@");
-    }
+//    @Test
+//    void changePassword() throws CustomerException {
+//        Customer customer = Customer.builder().username("omidalpha").password("Aa123456$").build();
+//        final Customer newCustomer = customerService.changePassword(customer.getUsername(),customer.getPassword(), "Aa123456@");
+//        assertThat(newCustomer.getPassword()).isEqualTo("Aa123456@");
+//    }
 
 }

@@ -12,5 +12,4 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Orders,Long> {
     List<Orders> findByJobStatusAndSubTasks(JobStatus status , SubTasks subTasks);
-    List<Orders> findByCustomerAndSubTasks(Customer customer , SubTasks subTasks);
 }
