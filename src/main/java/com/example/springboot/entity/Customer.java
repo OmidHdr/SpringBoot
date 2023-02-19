@@ -1,13 +1,8 @@
 package com.example.springboot.entity;
 
-import com.example.springboot.entity.Enum.UserRole;
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import jakarta.persistence.Entity;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-
-import java.time.LocalDate;
 
 @NoArgsConstructor
 @Entity

@@ -1,5 +1,6 @@
 package com.example.springboot.services;
 
+import com.example.springboot.dto.ChangePassword;
 import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Enum.UserRole;
 import com.example.springboot.exeption.CustomerException;
@@ -51,11 +52,13 @@ public class CustomerServiceimpl implements CustomerService {
 
     //section change password
     @Override
-    public Customer changePassword(String username , String password, String newPassword) throws CustomerException {
-        final Customer byUsername = findByUsernameAndPassword(username,password);
-        if (!Validation.validPassword(newPassword))
+    public Customer changePassword(ChangePassword changePassword) throws CustomerException {
+        if (changePassword.getPassword() == null || changePassword.getUsername() == null || changePassword.getNewPassword() == null)
+            throw new CustomerException("you should fill all of the items");
+        Customer byUsername = findByUsernameAndPassword(changePassword.getUsername(),changePassword.getPassword());
+        if (!Validation.validPassword(changePassword.getNewPassword()))
             throw new CustomerException("password should have at least a capital Letter and a minimal Letter and 8 character");
-        byUsername.setPassword(newPassword);
+        byUsername.setPassword(changePassword.getNewPassword());
         return customerRepository.save(byUsername);
     }
 

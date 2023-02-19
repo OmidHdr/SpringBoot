@@ -1,5 +1,6 @@
 package com.example.springboot.services;
 
+import com.example.springboot.dto.ChangePassword;
 import com.example.springboot.entity.Account;
 import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Orders;
@@ -10,6 +11,6 @@ public interface CustomerService {
 
     Customer findByUsernameAndPassword(String username, String password) throws CustomerException;
 
-    Customer changePassword(String username, String password, String newPassword) throws CustomerException;
+    Customer changePassword(ChangePassword changePassword) throws CustomerException;
 
 }

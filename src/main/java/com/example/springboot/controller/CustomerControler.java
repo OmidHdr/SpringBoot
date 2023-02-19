@@ -1,5 +1,6 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.ChangePassword;
 import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.exeption.CustomerException;
@@ -26,7 +27,7 @@ public class CustomerControler {
         return customerService.findByUsernameAndPassword(customer.getUsername(),customer.getPassword());
     }
     @PostMapping("/changePasswordCustomer")
-    public Customer changePassword(@RequestBody Customer customer, String newPassword) throws CustomerException {
-        return customerService.changePassword(customer.getUsername(),customer.getPassword() , newPassword);
+    public Customer changePassword(@RequestBody ChangePassword changePassword) throws CustomerException {
+        return customerService.changePassword(changePassword);
     }
 }

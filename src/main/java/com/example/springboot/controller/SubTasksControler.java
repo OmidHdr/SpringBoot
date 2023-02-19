@@ -1,5 +1,7 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.SubtaskEdit;
+import com.example.springboot.dto.SubTaskDto;
 import com.example.springboot.entity.SubTasks;
 import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.services.SubTaskServices;
@@ -25,8 +27,12 @@ public class SubTasksControler {
     }
 
     @GetMapping("/getAllsubtasks")
-    public List<SubTasks> getSubTasks(){
+    public List<SubTaskDto> getAllSubTasks() throws SubTasksException {
         return subTaskServices.allSubTasks();
     }
 
+    @PostMapping("/editSubtask")
+    public void editSubTask(@RequestBody SubtaskEdit sub) throws SubTasksException {
+        subTaskServices.editSubTask(sub);
+    }
 }

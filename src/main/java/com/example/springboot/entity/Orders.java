@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -21,7 +22,7 @@ public class Orders {
     @Column(name = "id", nullable = false)
     Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     Customer customer;
 
     String description;
@@ -37,15 +38,12 @@ public class Orders {
     @Column(nullable = false)
     JobStatus jobStatus;
 
-    @OneToOne
-    Offers offer;
+    @OneToMany(mappedBy = "orders",fetch = FetchType.LAZY)
+    List<Offers> offer;
 
     String opinion;
 
-    @ManyToMany
-    Set<Tasks> tasks;
-
-    @ManyToMany
-    Set<SubTasks> subTasks;
+    @ManyToOne(fetch = FetchType.LAZY)
+    SubTasks subTasks;
 
 }
