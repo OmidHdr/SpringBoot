@@ -1,4 +1,4 @@
-package com.example.springboot.dto;
+package com.example.springboot.dto.task;
 
 import jakarta.persistence.Id;
 import lombok.Getter;

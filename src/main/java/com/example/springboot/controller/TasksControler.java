@@ -1,6 +1,6 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.dto.TaskEdit;
+import com.example.springboot.dto.task.TaskEdit;
 import com.example.springboot.entity.Tasks;
 import com.example.springboot.exeption.TasksException;
 import com.example.springboot.services.TasksServices;

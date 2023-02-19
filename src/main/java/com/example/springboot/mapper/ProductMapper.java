@@ -1,7 +1,6 @@
 package com.example.springboot.mapper;
 
-import com.example.springboot.dto.TaskDto;
-import com.example.springboot.dto.offer.OffersGet;
+import com.example.springboot.dto.task.TaskDto;
 import com.example.springboot.dto.offer.OffersSet;
 import com.example.springboot.dto.order.OrderShow;
 import com.example.springboot.entity.Offers;

@@ -48,7 +48,7 @@ public class ExpertServiceimpl implements ExpertService {
             throw new ExpertException("This Subtask dose not exist please tell admin add it first");
         Expert expert = Expert.builder().firstName(account.getFirstName()).lastName(account.getLastName())
                 .email(account.getEmail()).date(LocalDate.now()).username(account.getUsername())
-                .password(account.getPassword()).userRole(UserRole.EXPERT).inventory(0)
+                .password(account.getPassword()).userRole(UserRole.EXPERT).inventory(0L)
                 .status(false).subTasks(Collections.singletonList(subtask)).build();
         try {
             return expertRepository.save(expert);

@@ -28,4 +28,5 @@ public interface OrderService {
     OrderShow startWork(Long id) throws OrderException;
 
     OrderShow doneJob(Long id, ExpertSet expertSet) throws OrderException, ExpertException;
+    Orders save(Orders orders);
 }

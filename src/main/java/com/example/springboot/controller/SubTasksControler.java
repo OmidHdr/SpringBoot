@@ -1,7 +1,7 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.dto.SubtaskEdit;
-import com.example.springboot.dto.SubTaskDto;
+import com.example.springboot.dto.subTask.SubtaskEdit;
+import com.example.springboot.dto.subTask.SubTaskDto;
 import com.example.springboot.entity.SubTasks;
 import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.services.SubTaskServices;

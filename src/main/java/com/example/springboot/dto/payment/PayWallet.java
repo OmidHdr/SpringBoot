@@ -1,18 +1,15 @@
-package com.example.springboot.dto;
+package com.example.springboot.dto.payment;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Setter
 @Getter
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SubTaskDto {
-    Long id;
-    String name;
-    String description;
-    Long basePrice;
+public class PayWallet {
+    String username;
+    String password;
+    
 }

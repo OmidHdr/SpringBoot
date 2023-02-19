@@ -1,10 +1,11 @@
 package com.example.springboot.services;
 
 import com.example.springboot.dto.ChangePassword;
-import com.example.springboot.entity.Account;
+import com.example.springboot.dto.payment.PayWallet;
 import com.example.springboot.entity.Customer;
-import com.example.springboot.entity.Orders;
 import com.example.springboot.exeption.CustomerException;
+import com.example.springboot.exeption.OfferException;
+import com.example.springboot.exeption.OrderException;
 
 public interface CustomerService {
     Customer saveCustomer(Customer account) throws CustomerException;
@@ -13,4 +14,5 @@ public interface CustomerService {
 
     Customer changePassword(ChangePassword changePassword) throws CustomerException;
 
+    String payment(Long id, PayWallet payWallet) throws OrderException, CustomerException, OfferException;
 }

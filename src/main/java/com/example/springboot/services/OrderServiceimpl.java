@@ -132,7 +132,7 @@ public class OrderServiceimpl implements OrderService {
     @Override
     public Optional<Orders> findById(Long offerId) throws OrderException {
         final Optional<Orders> byId = orderRepository.findById(offerId);
-        if (!byId.isPresent())
+        if (byId.isEmpty())
             throw new OrderException("wrong id");
         return byId;
     }
@@ -207,5 +207,9 @@ public class OrderServiceimpl implements OrderService {
         return result;
     }
 
+    @Override
+    public Orders save(Orders orders) {
+        return orderRepository.save(orders);
+    }
 
 }
