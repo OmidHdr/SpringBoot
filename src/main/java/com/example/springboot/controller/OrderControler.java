@@ -1,5 +1,6 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.expert.ExpertSet;
 import com.example.springboot.dto.offer.OffersGet;
 import com.example.springboot.dto.offer.OffersSave;
 import com.example.springboot.dto.offer.OffersSet;
@@ -56,6 +57,12 @@ public class OrderControler {
     @PostMapping("/startwork/{id}")
     public OrderShow startWork(@PathVariable(value = "id") Long id) throws OrderException {
         return orderService.startWork(id);
+    }
+
+    //section done
+    @PostMapping("/doneJob/{id}")
+    public OrderShow startJob(@PathVariable(value = "id") Long id , @RequestBody ExpertSet expert) throws OrderException, ExpertException {
+        return orderService.doneJob(id,expert);
     }
 
 

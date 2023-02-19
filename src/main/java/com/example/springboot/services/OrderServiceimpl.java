@@ -1,5 +1,6 @@
 package com.example.springboot.services;
 
+import com.example.springboot.dto.expert.ExpertSet;
 import com.example.springboot.dto.offer.OffersGet;
 import com.example.springboot.dto.offer.OffersSave;
 import com.example.springboot.dto.offer.OffersSet;
@@ -9,6 +10,7 @@ import com.example.springboot.entity.*;
 import com.example.springboot.entity.Enum.JobStatus;
 import com.example.springboot.exeption.*;
 import com.example.springboot.mapper.ProductMapper;
+import com.example.springboot.repository.OfferRepository;
 import com.example.springboot.repository.OrderRepository;
 import com.example.springboot.validation.Validation;
 import org.springframework.stereotype.Service;
@@ -24,13 +26,16 @@ public class OrderServiceimpl implements OrderService {
     private final SubTaskServices subTaskServices;
     private final ExpertServiceimpl expertService;
     private final OfferService offerService;
+    private final OfferRepository offerRepository;
 
-    public OrderServiceimpl(OrderRepository orderRepository, CustomerService customerService, SubTaskServices subTaskServices, ExpertServiceimpl expertService, OfferService offerService) {
+    public OrderServiceimpl(OrderRepository orderRepository, CustomerService customerService, SubTaskServices subTaskServices, ExpertServiceimpl expertService, OfferService offerService,
+                            OfferRepository offerRepository) {
         this.orderRepository = orderRepository;
         this.customerService = customerService;
         this.subTaskServices = subTaskServices;
         this.expertService = expertService;
         this.offerService = offerService;
+        this.offerRepository = offerRepository;
     }
 
     //section save order
@@ -148,7 +153,7 @@ public class OrderServiceimpl implements OrderService {
         if (!Objects.equals(order.get().getCustomer().getId(), customer.getId()))
             throw new OrderException("sorry you cant see this result");
         // find offer
-        final List<Offers> offers = offerService.findByOrders(offer.getOrderId());
+        final List<Offers> offers = offerService.findByOrderId(offer.getOrderId());
         if (offers == null)
             throw new OrderException("there is no order");
         final List<OffersSet> result = ProductMapper.INSTANCE.offerToDtoList(offers);
@@ -181,6 +186,25 @@ public class OrderServiceimpl implements OrderService {
         order.setJobStatus(JobStatus.STARTED);
         orderRepository.save(order);
         return ProductMapper.INSTANCE.orderTodto(order);
+    }
+
+    //section done job
+    @Override
+    public OrderShow doneJob(Long id, ExpertSet expert) throws OrderException, ExpertException {
+        final Orders order = orderRepository.findById(id).get();
+        if (order.getJobStatus() != JobStatus.STARTED)
+            throw new OrderException("the order sould be started first");
+        final Offers offer = offerRepository.findByOrderAndStatus(id);
+        final Long expertId = offer.getExpert().getId();
+        final Expert findExpert = expertService.findByUsernameAndPassword(expert.getUsername(), expert.getPassword());
+        if (!Objects.equals(findExpert.getId(), expertId))
+            throw new OrderException("sorry this expert dose not send this offer so you can not confirm this");
+        order.setJobStatus(JobStatus.FINISHED);
+        orderRepository.save(order);
+        final OrderShow result = ProductMapper.INSTANCE.orderTodto(order);
+        result.setPrice(offer.getSuggestion());
+        result.setDate(offer.getDate());
+        return result;
     }
 
 

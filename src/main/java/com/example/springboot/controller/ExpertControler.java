@@ -8,13 +8,11 @@ import com.example.springboot.entity.Expert;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.exeption.TasksException;
-import com.example.springboot.repository.ExpertRepository;
 import com.example.springboot.services.ExpertService;
 import com.example.springboot.services.ExpertServiceimpl;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.springboot.services.OrderService;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 
@@ -22,11 +20,11 @@ import java.util.List;
 public class ExpertControler {
 
     private final ExpertService expertService;
-    private final ExpertRepository repository;
+    private final OrderService orderService;
 
-    public ExpertControler(ExpertServiceimpl expertService, ExpertRepository repository) {
+    public ExpertControler(ExpertServiceimpl expertService, OrderService orderService) {
         this.expertService = expertService;
-        this.repository = repository;
+        this.orderService = orderService;
     }
 
     //section register Expert
@@ -56,12 +54,15 @@ public class ExpertControler {
     public void changePasswordExpert(@RequestBody ChangePassword changePassword) throws ExpertException {
         expertService.changePassword(changePassword);
     }
+    //section reguest new job
     @PostMapping("/requestJob")
     public Expert requestNewJob(@RequestBody ReguestJob job) throws ExpertException, SubTasksException, TasksException {
         return expertService.requestForNewJob(job);
     }
-    @PostMapping("removeExpertFromSubtask")
+    //section remove expert in sub
+    @PostMapping("/removeExpertFromSubtask")
     public void removeExpertFromSubtask(@RequestBody RemoveExpertFromSubService remove) throws ExpertException, SubTasksException, TasksException {
         expertService.removeExpertFromSubtask(remove);
     }
+
 }

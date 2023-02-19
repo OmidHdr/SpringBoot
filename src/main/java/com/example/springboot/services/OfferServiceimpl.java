@@ -22,7 +22,7 @@ public class OfferServiceimpl implements OfferService {
     }
 
     @Override
-    public List<Offers> findByOrders(Long id) {
+    public List<Offers> findByOrderId(Long id) {
         return offerRepository.findByOrderId(id);
     }
 
@@ -32,6 +32,14 @@ public class OfferServiceimpl implements OfferService {
         if (offers == null)
             throw new OfferException("wrong offer id ");
         return offers;
+    }
+
+    @Override
+    public Offers findByOrderAndStatus(Long id) throws OfferException {
+        final Offers result = offerRepository.findByOrderAndStatus(id);
+        if (result == null)
+            throw new OfferException("there is no offer");
+        return result;
     }
 
 }

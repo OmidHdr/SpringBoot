@@ -1,5 +1,6 @@
 package com.example.springboot.services;
 
+import com.example.springboot.dto.expert.ExpertSet;
 import com.example.springboot.dto.offer.OffersGet;
 import com.example.springboot.dto.offer.OffersSave;
 import com.example.springboot.dto.offer.OffersSet;
@@ -25,4 +26,6 @@ public interface OrderService {
     OrderShow confirmOrder(Long idOrder , Long idOffer) throws OrderException, OfferException;
 
     OrderShow startWork(Long id) throws OrderException;
+
+    OrderShow doneJob(Long id, ExpertSet expertSet) throws OrderException, ExpertException;
 }

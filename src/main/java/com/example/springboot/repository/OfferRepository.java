@@ -13,4 +13,7 @@ public interface OfferRepository extends JpaRepository<Offers , Long> {
     @Query("select o from Offers o where o.orders.id=?1")
     List<Offers> findByOrderId(Long id);
 
+    @Query("select o from Offers o where o.orders.id=?1 and o.status = true ")
+    Offers findByOrderAndStatus(Long id);
+
 }
