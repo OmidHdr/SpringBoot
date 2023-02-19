@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="container p-0">
+    <div class="card px-4">
+        <p class="h8 py-3">Payment Details</p>
+        <div class="row gx-3">
+            <div class="col-12">
+                <div class="d-flex flex-column">
+                    <p class="text mb-1">Card Number</p>
+                    <input id="cardNumber" class="form-control mb-3" type="text" placeholder="1234 5678 435678">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <p class="text mb-1">Expiry</p>
+                    <input class="form-control mb-3" type="text" placeholder="MM/YYYY">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <p lass="text mb-1">cvv2</p>
+                    <input id="cvv2" class="form-control mb-3 pt-2 " type="password" placeholder="***">
+                </div>
+            </div>
+            <div class="btn btn-primary mb-3">
+                <button class="btn btn-primary" id="paymentBtn">Pay</button>
+            </div>
+            <script
+                    src="https://code.jquery.com/jquery-3.6.3.slim.js"
+                    integrity="sha256-DKU1CmJ8kBuEwumaLuh9Tl/6ZB6jzGOBV/5YpNE2BWc="
+                    crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+                    crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.14/sweetalert2.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+                    integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+            <script>
+                $("#paymentBtn").on('click', (e) => {
+                    e.preventDefault();
+                    const cardNumber = document.getElementById('cardNumber').value;
+                    const cvv2 = document.getElementById('cvv2').value;
+                    const form = new FormData();
+                    form.append('cardNumber', cardNumber);
+                    form.append('cvv2', cvv2);
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8080/test",
+                        data: form,
+                        processData: false,
+                        contentType: false,
+                        dataType: "text",
+                        success: function (response) {
+                            alert(response.value)
+                        },
+                        error: function (response) {
+                            alert(response.value)
+                        }
+                    })
+                })
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

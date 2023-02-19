@@ -3,7 +3,6 @@ package com.example.springboot.services;
 import com.example.springboot.dto.offer.OffersGet;
 import com.example.springboot.dto.offer.OffersSave;
 import com.example.springboot.dto.offer.OffersSet;
-import com.example.springboot.dto.order.OrderConfirm;
 import com.example.springboot.dto.order.OrderSave;
 import com.example.springboot.dto.order.OrderShow;
 import com.example.springboot.entity.Orders;
@@ -24,4 +23,6 @@ public interface OrderService {
     List<OffersSet> getAllExpertSuggestions(OffersGet offer) throws OfferException, OrderException, CustomerException, SubTasksException;
 
     OrderShow confirmOrder(Long idOrder , Long idOffer) throws OrderException, OfferException;
+
+    OrderShow startWork(Long id) throws OrderException;
 }

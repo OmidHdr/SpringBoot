@@ -3,14 +3,11 @@ package com.example.springboot.controller;
 import com.example.springboot.dto.offer.OffersGet;
 import com.example.springboot.dto.offer.OffersSave;
 import com.example.springboot.dto.offer.OffersSet;
-import com.example.springboot.dto.order.OrderConfirm;
 import com.example.springboot.dto.order.OrderSave;
 import com.example.springboot.dto.order.OrderShow;
-import com.example.springboot.entity.Orders;
 import com.example.springboot.exeption.*;
 import com.example.springboot.services.OfferService;
 import com.example.springboot.services.OrderService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,4 +51,12 @@ public class OrderControler {
             ,@PathVariable(value = "offer") Long idOffer) throws OrderException, OfferException {
         return orderService.confirmOrder(idOrder , idOffer);
     }
+
+    // شروع شدن کار
+    @PostMapping("/startwork/{id}")
+    public OrderShow startWork(@PathVariable(value = "id") Long id) throws OrderException {
+        return orderService.startWork(id);
+    }
+
+
 }

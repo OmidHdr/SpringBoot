@@ -172,5 +172,16 @@ public class OrderServiceimpl implements OrderService {
         return result;
     }
 
+    //section start work
+    @Override
+    public OrderShow startWork(Long id) throws OrderException {
+        Orders order = orderRepository.findById(id).get();
+        if (order.getJobStatus() != JobStatus.EXPERT_ON_WAY)
+            throw new OrderException("the order is not in expert on way situation");
+        order.setJobStatus(JobStatus.STARTED);
+        orderRepository.save(order);
+        return ProductMapper.INSTANCE.orderTodto(order);
+    }
+
 
 }
