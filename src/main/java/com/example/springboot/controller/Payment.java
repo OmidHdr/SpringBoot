@@ -1,17 +1,35 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.HelloDto;
+import com.example.springboot.dto.HelloResponseDto;
+import com.example.springboot.dto.expert.ForbiddenException;
 import com.example.springboot.dto.payment.PaymentDto;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.springboot.services.ValidCaptcha;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 public class Payment {
 
+    private final ValidCaptcha service;
+
+//    @PostMapping("/test")
+//    public String test(@ModelAttribute PaymentDto dto) {
+//        System.out.println(dto.toString());
+//        return "ok";
+//    }
+
     @PostMapping("/test")
-    public String test(@ModelAttribute PaymentDto dto) {
-        System.out.println(dto.toString());
-        return "ok";
+    @ResponseStatus(code = HttpStatus.OK)
+    public HelloResponseDto welcome(@RequestBody final HelloDto dto)
+            throws ForbiddenException {
+        final boolean isValidCaptcha = service.validateCaptcha(dto.getCaptchaResponse());
+        if (!isValidCaptcha) {
+            throw new ForbiddenException("INVALID_CAPTCHA");
+        }
+        return new HelloResponseDto("Greetings " + dto.getName());
     }
 
 }
