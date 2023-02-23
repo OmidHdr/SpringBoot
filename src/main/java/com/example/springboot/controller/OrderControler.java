@@ -1,11 +1,12 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.dto.expert.ExpertSet;
+import com.example.springboot.dto.DtoOpinion;
 import com.example.springboot.dto.offer.OffersGet;
 import com.example.springboot.dto.offer.OffersSave;
 import com.example.springboot.dto.offer.OffersSet;
 import com.example.springboot.dto.order.OrderSave;
 import com.example.springboot.dto.order.OrderShow;
+import com.example.springboot.entity.Customer;
 import com.example.springboot.exeption.*;
 import com.example.springboot.services.OfferService;
 import com.example.springboot.services.OrderService;
@@ -27,43 +28,59 @@ public class OrderControler {
         this.offerService = offerService;
     }
 
+    // ارسال سفارش
     @PostMapping("/sendOrder")
     public void sendOrder(@RequestBody OrderSave order) throws CustomerException, SubTasksException, OrderException {
         orderService.saveOrder(order);
     }
-    //مشاهدده لیست پینهادات
+
+    // مشاهده سفارش های ارسال شده
+    @PostMapping("/showOrders")
+    public List<OrderShow> showOrders(@RequestBody Customer customer) throws CustomerException, OrderException {
+        return orderService.showOrders(customer);
+    }
+
+    // ارسال پیشنهاد توسط متخصص
+    @PostMapping("/sendOfferFromExpert")
+    public OrderShow sendOffer(@RequestBody OffersSave offer) throws ExpertException, SubTasksException, OrderException {
+        return orderService.sendOffer(offer);
+    }
+
+    // مشاهده سفارش ها توسط متخصص
     @PostMapping("/jobforExpert")
     public List<OrderShow> jobForExpert(@RequestBody OrderSave order) throws ExpertException, SubTasksException, OrderException {
         return orderService.jobforExpert(order);
     }
-    // ارسال پیشنهاد توسط متخصص
-    @PostMapping("/sendOfferFromExpert")
-    public OrderShow confirmJob(@RequestBody OffersSave offer) throws ExpertException, SubTasksException, OrderException {
-        return orderService.confirmJob(offer);
-    }
-    // مشاهده لیست پشنهادات ارسال شده توسط متخصص ها
-    @PostMapping("/showExpertSuggestions")
-    public List<OffersSet> getAllExpertSuggestions (@RequestBody OffersGet offer) throws CustomerException, OfferException, OrderException, SubTasksException {
+
+    // مشاهده لیست پشنهادات ارسال شده
+    @PostMapping("/showAllExpertSuggestions")
+    public List<OffersSet> getAllExpertSuggestions(@RequestBody OffersGet offer) throws CustomerException, OfferException, OrderException, SubTasksException {
         return orderService.getAllExpertSuggestions(offer);
     }
+
     // انتخاب متخصص برای سفارش توسط مشتری
-    @PostMapping("/selectExperyById/{order}/{offer}")
-    public OrderShow selectExpertForOrder(@PathVariable(value = "order")Long idOrder
-            ,@PathVariable(value = "offer") Long idOffer) throws OrderException, OfferException {
-        return orderService.confirmOrder(idOrder , idOffer);
+    @PostMapping("/selectSuggastion/{order}/{offer}")
+    public OrderShow selectExpertForOrder(@PathVariable(value = "order") Long idOrder
+            , @PathVariable(value = "offer") Long idOffer) throws OrderException, OfferException {
+        return orderService.confirmOrder(idOrder, idOffer);
     }
 
+    // با گرفتن آی دی offer
     // شروع شدن کار
-    @PostMapping("/startwork/{id}")
+    @PostMapping("/startJob/{id}")
     public OrderShow startWork(@PathVariable(value = "id") Long id) throws OrderException {
         return orderService.startWork(id);
     }
 
-    //section done
+
     @PostMapping("/doneJob/{id}")
-    public OrderShow startJob(@PathVariable(value = "id") Long id , @RequestBody ExpertSet expert) throws OrderException, ExpertException {
-        return orderService.doneJob(id,expert);
+    public OrderShow doneJob(@PathVariable(value = "id") Long id) throws OrderException, OfferException {
+        return orderService.doneJob(id);
     }
 
+    @PostMapping("/opinion/{id}")
+    public OrderShow sendOpinion(@PathVariable(value = "id") Long id,@RequestBody DtoOpinion dtoOpinion) throws OrderException {
+        return orderService.sendOpinion(id, dtoOpinion);
+    }
 
 }

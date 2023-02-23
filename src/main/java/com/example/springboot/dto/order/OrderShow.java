@@ -14,6 +14,6 @@ public class OrderShow {
     Long id;
     String address;
     String description;
-    Long price;
-    String date;
+    Long proposedPrice;
+    String finishDate;
 }

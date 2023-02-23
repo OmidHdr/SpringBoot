@@ -1,5 +1,6 @@
 package com.example.springboot.services;
 
+import com.example.springboot.dto.order.OrderShow;
 import com.example.springboot.entity.Offers;
 import com.example.springboot.exeption.OfferException;
 
@@ -13,5 +14,7 @@ public interface OfferService {
     Offers findById(Long id) throws OfferException;
 
     Offers findByOrderAndStatus(Long id) throws OfferException;
+
+    Offers save(Offers offer);
 
 }

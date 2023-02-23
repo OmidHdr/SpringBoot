@@ -18,7 +18,8 @@ public class Offers {
     Long id;
     String date ;
     Long suggestion;
-    String periodOfTime;
+    @Embedded
+    Time periodOfTime;
     @ManyToOne(fetch = FetchType.LAZY)
     Expert expert;
     @ManyToOne(fetch = FetchType.LAZY)

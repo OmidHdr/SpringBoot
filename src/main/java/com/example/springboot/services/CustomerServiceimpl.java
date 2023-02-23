@@ -2,6 +2,7 @@ package com.example.springboot.services;
 
 import com.example.springboot.dto.ChangePassword;
 import com.example.springboot.dto.payment.PayWallet;
+import com.example.springboot.entity.Account;
 import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Enum.JobStatus;
 import com.example.springboot.entity.Enum.UserRole;
@@ -75,27 +76,10 @@ public class CustomerServiceimpl implements CustomerService {
         return customerRepository.save(byUsername);
     }
 
-    //section pay wallet
+    //section save
     @Override
-    public String payment(Long id, PayWallet payWallet) throws OrderException, CustomerException, OfferException {
-        final Customer customer = customerRepository.findByUsernameAndPassword(payWallet.getUsername(), payWallet.getPassword());
-        final Orders order = orderService.findById(id).get();
-        if (!Objects.equals(order.getCustomer().getId(), customer.getId()))
-            throw new CustomerException("this customer dose not access ");
-        if (order.getJobStatus() != JobStatus.FINISHED)
-            throw new CustomerException("you cant pay order status not finished first finish job and try again");
-        final Long inventory = customer.getInventory();
-        final Offers offer = offerService.findByOrderAndStatus(id);
-        if (inventory < offer.getSuggestion()){
-            Long money = offer.getSuggestion() - inventory;
-            throw new CustomerException("you dont have enough money in your wallet " +
-                    " please charge "+money);
-        }
-        order.setJobStatus(JobStatus.PAYED);
-        customer.setInventory(customer.getInventory() - offer.getSuggestion());
-        customerRepository.save(customer);
-        orderService.save(order);
-        return "payed successfully";
+    public Customer save(Customer account){
+        return customerRepository.save(account);
     }
 
 

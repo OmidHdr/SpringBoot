@@ -24,4 +24,5 @@ public interface ExpertService {
     List<ExpertSet> showUnconfirmExpert() throws ExpertException;
 
     void removeExpertFromSubtask(RemoveExpertFromSubService remove) throws ExpertException, SubTasksException, TasksException;
+    Expert findById(Long id) throws ExpertException;
 }

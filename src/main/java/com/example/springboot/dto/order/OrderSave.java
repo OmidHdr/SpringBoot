@@ -14,8 +14,9 @@ public class OrderSave {
     String username;
     String password;
     String subtaskName;
+
     String description;
     String address;
-    String startDate;
-    Long priceSuggestion;
+    String finishDate;
+    Long proposedPrice;
 }

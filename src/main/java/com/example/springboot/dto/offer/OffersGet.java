@@ -1,6 +1,5 @@
 package com.example.springboot.dto.offer;
 
-import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +13,5 @@ import lombok.experimental.FieldDefaults;
 public class OffersGet {
     String username;
     String password;
-    String subtaskName;
     Long orderId;
 }

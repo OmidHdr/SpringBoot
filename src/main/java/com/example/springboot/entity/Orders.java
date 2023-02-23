@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -30,8 +29,8 @@ public class Orders {
     @Column(name = "proposed_price")
     Long proposedPrice;
 
-    @Column(name = "start_date")
-    String startDate;
+    @Column(name = "finish_date")
+    String finishDate;
     String address;
 
     @Enumerated(value = EnumType.STRING)
@@ -41,7 +40,8 @@ public class Orders {
     @OneToMany(mappedBy = "orders",fetch = FetchType.LAZY)
     List<Offers> offer;
 
-    String opinion;
+    @Embedded
+    Opinion opinion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     SubTasks subTasks;

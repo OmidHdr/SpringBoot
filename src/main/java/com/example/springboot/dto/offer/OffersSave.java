@@ -1,5 +1,7 @@
 package com.example.springboot.dto.offer;
 
+import com.example.springboot.entity.Expert;
+import com.example.springboot.entity.Time;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +18,7 @@ public class OffersSave {
     String password;
     String subtaskName;
     Long suggestion;
-    String timeStart;
-    String periodOfTime;
+    String date;
+    Time periodOfTime;
+    Expert expert;
 }

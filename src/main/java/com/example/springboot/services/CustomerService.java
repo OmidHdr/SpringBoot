@@ -14,5 +14,5 @@ public interface CustomerService {
 
     Customer changePassword(ChangePassword changePassword) throws CustomerException;
 
-    String payment(Long id, PayWallet payWallet) throws OrderException, CustomerException, OfferException;
+    Customer save(Customer customer);
 }

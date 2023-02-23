@@ -35,10 +35,4 @@ public class CustomerControler {
         return customerService.changePassword(changePassword);
     }
 
-//    section pay
-    @PostMapping("/payment/wallet/{id}")
-    public void paywithWallet(@PathVariable(value = "id") Long id , @RequestBody PayWallet payWallet) throws CustomerException, OfferException, OrderException {
-        customerService.payment(id, payWallet);
-    }
-
 }

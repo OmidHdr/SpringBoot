@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -41,7 +42,7 @@ public class ExpertServiceimpl implements ExpertService {
             throw new ExpertException("password should have at least a capital Letter and a minimal Letter and 8 character");
         if (account.getEmail() == null || !Validation.validateEmail(account.getEmail()))
             throw new ExpertException("Email not valid");
-        if (account.getSubTaskName() == null )
+        if (account.getSubTaskName() == null)
             throw new ExpertException("You didn't set subTask");
         SubTasks subtask = subTasksService.findByName(account.getSubTaskName());
         if (subtask == null)
@@ -49,7 +50,7 @@ public class ExpertServiceimpl implements ExpertService {
         Expert expert = Expert.builder().firstName(account.getFirstName()).lastName(account.getLastName())
                 .email(account.getEmail()).date(LocalDate.now()).username(account.getUsername())
                 .password(account.getPassword()).userRole(UserRole.EXPERT).inventory(0L)
-                .status(false).subTasks(Collections.singletonList(subtask)).build();
+                .status(false).subTasks(Collections.singletonList(subtask)).score(10).build();
         try {
             return expertRepository.save(expert);
         } catch (Exception e) {
@@ -60,7 +61,7 @@ public class ExpertServiceimpl implements ExpertService {
     //section login
     @Override
     public Expert findByUsernameAndPassword(String username, String password) throws ExpertException {
-        final Expert expert = expertRepository.findByUsernameAndPassword(username,password);
+        final Expert expert = expertRepository.findByUsernameAndPassword(username, password);
         if (expert == null)
             throw new ExpertException("wrong username or password");
         if (!expert.getStatus())
@@ -89,6 +90,7 @@ public class ExpertServiceimpl implements ExpertService {
         if (byUsername == null)
             throw new ExpertException("dear admin please give expert username");
         byUsername.setStatus(true);
+        byUsername.setScore(0);
         expertRepository.save(byUsername);
     }
 
@@ -99,7 +101,7 @@ public class ExpertServiceimpl implements ExpertService {
             throw new ExpertException("you didn't set task");
         if (job.getSubTaskName() == null)
             throw new ExpertException("you didn't set subtask");
-        if (job.getUsername() == null || job.getPassword()== null)
+        if (job.getUsername() == null || job.getPassword() == null)
             throw new ExpertException("you didn't set username or password");
         final Expert byUserPass = expertRepository.findByUsernameAndPassword(job.getUsername(), job.getPassword());
         if (byUserPass == null)
@@ -159,6 +161,19 @@ public class ExpertServiceimpl implements ExpertService {
         }
         expert.setSubTasks(subTasks);
         expertRepository.save(expert);
+    }
+
+    //find by Id
+    @Override
+    public Expert findById(Long id) throws ExpertException {
+        final Optional<Expert> byId = expertRepository.findById(id);
+        if (byId.isEmpty())
+            throw new ExpertException("can't find expert");
+        return byId.get();
+    }
+
+    public Expert save(Expert expert) {
+        return expertRepository.save(expert);
     }
 
 }

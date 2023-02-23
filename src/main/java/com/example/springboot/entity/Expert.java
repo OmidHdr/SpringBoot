@@ -20,6 +20,8 @@ public class Expert extends Account{
 
     byte[] image;
 
+    int score;
+
     @JoinColumn(nullable = false)
     @ManyToMany(fetch = FetchType.LAZY)
     List<SubTasks> subTasks;
