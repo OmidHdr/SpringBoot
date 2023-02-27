@@ -1,5 +1,6 @@
 package com.example.springboot.dto.task;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,8 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskEdit {
+    @NotNull
     String name;
-    String newName;
+    @NotNull
+    private String newName;
 }

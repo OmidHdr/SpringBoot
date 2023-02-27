@@ -15,4 +15,6 @@ public interface CustomerService {
     Customer changePassword(ChangePassword changePassword) throws CustomerException;
 
     Customer save(Customer customer);
+
+    Customer findCustomer(String find, String item) throws CustomerException;
 }

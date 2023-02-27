@@ -37,5 +37,5 @@ public interface OrderService {
 
     OrderShow payWithWallet(Long id, Customer account) throws OrderException, CustomerException, OfferException, ExpertException;
 
-    OrderShow sendOpinion(Long id, DtoOpinion dtoOpinion) throws OrderException;
+    OrderShow sendOpinion(Long id, DtoOpinion dtoOpinion) throws OrderException, OfferException;
 }

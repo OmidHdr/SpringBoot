@@ -10,6 +10,7 @@ import com.example.springboot.entity.Customer;
 import com.example.springboot.exeption.*;
 import com.example.springboot.services.OfferService;
 import com.example.springboot.services.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,7 +80,7 @@ public class OrderControler {
     }
 
     @PostMapping("/opinion/{id}")
-    public OrderShow sendOpinion(@PathVariable(value = "id") Long id,@RequestBody DtoOpinion dtoOpinion) throws OrderException {
+    public OrderShow sendOpinion(@Valid @PathVariable(value = "id") Long id, @RequestBody DtoOpinion dtoOpinion) throws OrderException, OfferException {
         return orderService.sendOpinion(id, dtoOpinion);
     }
 

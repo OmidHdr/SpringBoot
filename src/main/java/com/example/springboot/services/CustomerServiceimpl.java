@@ -1,24 +1,17 @@
 package com.example.springboot.services;
 
 import com.example.springboot.dto.ChangePassword;
-import com.example.springboot.dto.payment.PayWallet;
-import com.example.springboot.entity.Account;
 import com.example.springboot.entity.Customer;
-import com.example.springboot.entity.Enum.JobStatus;
 import com.example.springboot.entity.Enum.UserRole;
-import com.example.springboot.entity.Offers;
-import com.example.springboot.entity.Orders;
 import com.example.springboot.exeption.CustomerException;
-import com.example.springboot.exeption.OfferException;
-import com.example.springboot.exeption.OrderException;
 import com.example.springboot.repository.CustomerRepository;
-import com.example.springboot.repository.OrderRepository;
 import com.example.springboot.validation.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Objects;
+import java.util.List;
 
 @Service
 public class CustomerServiceimpl implements CustomerService {
@@ -27,10 +20,12 @@ public class CustomerServiceimpl implements CustomerService {
     private OrderService orderService;
     private final CustomerRepository customerRepository;
     private final OfferService offerService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public CustomerServiceimpl(CustomerRepository customerRepository, OfferService offerService) {
+    public CustomerServiceimpl(CustomerRepository customerRepository, OfferService offerService, BCryptPasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
         this.offerService = offerService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     //section register
@@ -39,7 +34,7 @@ public class CustomerServiceimpl implements CustomerService {
         final UserRole userRole = account.getUserRole();
         if (account.getFirstName() == null || account.getLastName() == null || !Validation.validString(account.getFirstName()) || !Validation.validString(account.getLastName()))
             throw new CustomerException("wrong firstname or lastname !!");
-        if (account.getUserRole() == null || !userRole.equals(UserRole.CUSTOMER))
+        if (account.getUserRole() == null || !userRole.equals(UserRole.ROLE_CUSTOMER))
             throw new CustomerException("Wrong Role !!");
         if (account.getPassword() == null || !Validation.validPassword(account.getPassword()))
             throw new CustomerException("password should have at least a capital Letter and a minimal Letter and 8 character");
@@ -47,6 +42,7 @@ public class CustomerServiceimpl implements CustomerService {
             throw new CustomerException("Email Not valid");
         account.setInventory(0L);
         account.setDate(LocalDate.now());
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
         try {
             return customerRepository.save(account);
         } catch (Exception e) {
@@ -80,6 +76,13 @@ public class CustomerServiceimpl implements CustomerService {
     @Override
     public Customer save(Customer account){
         return customerRepository.save(account);
+    }
+
+    //section find
+    @Override
+    public Customer findCustomer(String find ,String item) throws CustomerException {
+        final List<Customer> byitem = customerRepository.findByItem(find,item);
+        return new Customer();
     }
 
 

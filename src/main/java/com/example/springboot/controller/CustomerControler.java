@@ -8,12 +8,12 @@ import com.example.springboot.exeption.CustomerException;
 import com.example.springboot.exeption.OfferException;
 import com.example.springboot.exeption.OrderException;
 import com.example.springboot.services.CustomerService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/customer")
 public class CustomerControler {
 
     private final CustomerService customerService;
@@ -22,17 +22,28 @@ public class CustomerControler {
         this.customerService = customerService;
     }
 
-    @PostMapping("/registerCustomer")
+    @PostMapping("/register")
     public Customer saveCustomer(@RequestBody Customer customer) throws CustomerException {
         return customerService.saveCustomer(customer);
     }
-    @PostMapping("/loginCustomer")
+
+    @PostMapping("/login")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public Customer loginCustomer(@RequestBody Customer customer) throws CustomerException {
-        return customerService.findByUsernameAndPassword(customer.getUsername(),customer.getPassword());
+        Customer cus = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return cus;
+//        return customerService.findByUsernameAndPassword(customer.getUsername(),customer.getPassword());
     }
+
+    @PreAuthorize("hasAnyRole('')")
     @PostMapping("/changePasswordCustomer")
     public Customer changePassword(@RequestBody ChangePassword changePassword) throws CustomerException {
         return customerService.changePassword(changePassword);
+    }
+
+    @PostMapping("/find/{find}/{item}")
+    public Customer findCustomer(@PathVariable(value = "find") String find , @PathVariable(value = "item") String item) throws CustomerException {
+        return customerService.findCustomer(find, item);
     }
 
 }

@@ -1,9 +1,12 @@
 package com.example.springboot.validation;
 
+import com.example.springboot.dto.payment.PaymentDto;
 import com.example.springboot.entity.Time;
 import com.example.springboot.exeption.OrderException;
+import com.example.springboot.exeption.PaymentException;
 import com.github.mfathi91.time.PersianDate;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -202,6 +205,24 @@ public class Validation {
         } catch (Exception e) {
             return 1;
         }
+    }
+    // section valid payment
+    public static void validPayment(PaymentDto dto) throws PaymentException {
+        if (dto.getCardNumber().length() != 16)
+            throw new PaymentException("cart number should be 16 letter");
+        if (dto.getCvv2().length() < 3 || dto.getCvv2().length() > 4)
+            throw new PaymentException("cvv2 shoud be 3 or 4 letter");
+        String expiry = dto.getExpiry();
+        final boolean matches = expiry.matches("^(0?[1-9]|1[0-2])\\/(\\d{4})$");
+        if (!matches)
+            throw new PaymentException("wrong expiry date");
+        final String[] split = expiry.split("/");
+        int month = Integer.parseInt(split[0]);
+        int year = Integer.parseInt(split[1]);
+        PersianDate systemDate = PersianDate.now();
+        if (year < systemDate.getYear() || year > (systemDate.getYear() + 6 ))
+            throw new PaymentException("your card is expired try again with different card");
+        System.out.println(split);
     }
 
 }

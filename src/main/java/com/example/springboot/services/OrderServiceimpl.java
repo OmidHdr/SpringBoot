@@ -29,14 +29,16 @@ public class OrderServiceimpl implements OrderService {
     private final OrderRepository orderRepository;
     private final SubTaskServices subTaskServices;
     private final ExpertServiceimpl expertService;
+    private final AdminService adminService;
     @Autowired
     private OfferRepository offerRepository;
 
-    public OrderServiceimpl(OrderRepository orderRepository, CustomerService customerService, SubTaskServices subTaskServices, ExpertServiceimpl expertService) {
+    public OrderServiceimpl(OrderRepository orderRepository, CustomerService customerService, SubTaskServices subTaskServices, ExpertServiceimpl expertService, AdminService adminService) {
         this.orderRepository = orderRepository;
         this.customerService = customerService;
         this.subTaskServices = subTaskServices;
         this.expertService = expertService;
+        this.adminService = adminService;
     }
 
     //section save Order
@@ -256,31 +258,40 @@ public class OrderServiceimpl implements OrderService {
         if (customer.getInventory() < offer.getSuggestion())
             throw new CustomerException("you don't have enough money");
         Long priceCustomer = customer.getInventory() - offer.getSuggestion();
-        Long priceExpert = expert.getInventory() + offer.getSuggestion();
+        Long priceExpert = expert.getInventory() + ((int)(offer.getSuggestion() * 0.7 ));
         customer.setInventory(priceCustomer);
         expert.setInventory(priceExpert);
 
-        customerService.save(customer);
+        Admin admin = adminService.getAdmin("root", "root");
+        admin.setInventory((long)(offer.getSuggestion() * 0.3));
+                customerService.save(customer);
         order.setJobStatus(JobStatus.PAYED);
         orderRepository.save(order);
         expertService.save(expert);
+        adminService.saveAdmin(admin);
         return ProductMapper.INSTANCE.orderTodto(byId.get());
     }
 
     //section opinion
     @Override
-    public OrderShow sendOpinion(Long id, DtoOpinion dtoOpinion) throws OrderException {
+    public OrderShow sendOpinion(Long id, DtoOpinion dtoOpinion) throws OrderException, OfferException {
         if (dtoOpinion.getOpinion() == null)
             throw new OrderException("fill opinion and try again");
+        if (dtoOpinion.getSatisfaction() < 1 || dtoOpinion.getSatisfaction() > 5)
+            throw new OrderException("Satisfaction can not be less than 1 or grater than 5");
         final Optional<Orders> byId = orderRepository.findById(id);
         if (byId.isEmpty())
             throw new OrderException("can't find order");
         Orders order = byId.get();
+        Offers offer = offerService.findByOrderAndStatus(byId.get().getId());
+        Expert expert = offer.getExpert();
         if (order.getJobStatus() != JobStatus.PAYED)
             throw new OrderException("you should pay it first");
-        final Opinion opinion = ProductMapper.INSTANCE.dtoToOpinion(dtoOpinion);
+        Opinion opinion = ProductMapper.INSTANCE.dtoToOpinion(dtoOpinion);
+        expert.setScore(expert.getScore() + dtoOpinion.getSatisfaction());
         order.setOpinion(opinion);
         orderRepository.save(order);
+        expertService.save(expert);
         return ProductMapper.INSTANCE.orderTodto(order);
     }
 

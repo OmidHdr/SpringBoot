@@ -1,6 +1,7 @@
 package com.example.springboot.entity;
 
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

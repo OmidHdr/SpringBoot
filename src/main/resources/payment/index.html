@@ -61,7 +61,7 @@
             <div class="col-6">
                 <div class="d-flex flex-column">
                     <p class="text mb-1">Expiry</p>
-                    <input class="form-control mb-3" type="text" placeholder="MM/YYYY">
+                    <input id="expiry" class="form-control mb-3" type="text" placeholder="MM/YYYY">
                 </div>
             </div>
             <div class="col-6">
@@ -81,7 +81,6 @@
                 <button class="btn btn-primary" id="paymentBtn">Pay</button>
             </div>
 
-
             <script
                     src="https://code.jquery.com/jquery-3.6.3.slim.js"
                     integrity="sha256-DKU1CmJ8kBuEwumaLuh9Tl/6ZB6jzGOBV/5YpNE2BWc="
@@ -97,9 +96,11 @@
                     e.preventDefault();
                     const cardNumber = document.getElementById('cardNumber').value;
                     const cvv2 = document.getElementById('cvv2').value;
+                    const expiry = document.getElementById('expiry').value;
                     const form = new FormData();
                     form.append('cardNumber', cardNumber);
                     form.append('cvv2', cvv2);
+                    form.append('expiry' , expiry);
                     $.ajax({
                         type: "POST",
                         url: "http://localhost:8080/test",
