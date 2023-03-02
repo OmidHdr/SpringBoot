@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/customer/register").permitAll()
                 .requestMatchers("/home").permitAll()
+                .requestMatchers("/admin").permitAll()
                 .and()
                 .authorizeHttpRequests().anyRequest().authenticated().and().httpBasic();
         return http.build();

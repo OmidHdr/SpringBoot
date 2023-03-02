@@ -244,7 +244,7 @@ public class OrderServiceimpl implements OrderService {
 
     //section pay
     @Override
-    public OrderShow payWithWallet(Long id,Customer account) throws OrderException, CustomerException, OfferException, ExpertException {
+    public OrderShow payWithWallet(Long id,Customer account) throws OrderException, CustomerException, OfferException, ExpertException, AdminException {
         final Optional<Orders> byId = orderRepository.findById(id);
         if (byId.isEmpty())
             throw new OrderException("can't find order");

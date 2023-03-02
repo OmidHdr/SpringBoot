@@ -23,7 +23,7 @@ public class PaymentController {
     }
 
     @PostMapping("/payment/wallet/{id}")
-    public OrderShow payWithWallet(@PathVariable(value = "id") Long id, @RequestBody Customer account) throws OrderException, CustomerException, OfferException, ExpertException {
+    public OrderShow payWithWallet(@PathVariable(value = "id") Long id, @RequestBody Customer account) throws OrderException, CustomerException, OfferException, ExpertException, AdminException {
         return orderService.payWithWallet(id,account);
     }
 

@@ -1,12 +1,10 @@
 package com.example.springboot.services;
 
-import com.example.springboot.dto.ChangePassword;
 import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Enum.UserRole;
 import com.example.springboot.exeption.CustomerException;
 import com.example.springboot.repository.CustomerRepository;
 import com.example.springboot.validation.Validation;
-import org.apache.catalina.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CustomerServiceimpl implements CustomerService {
@@ -36,7 +32,6 @@ public class CustomerServiceimpl implements CustomerService {
     //section register
     @Override
     public Customer saveCustomer(Customer account) throws CustomerException {
-        final UserRole userRole = account.getUserRole();
         if (account.getFirstName() == null || account.getLastName() == null || !Validation.validString(account.getFirstName()) || !Validation.validString(account.getLastName()))
             throw new CustomerException("wrong firstname or lastname !!");
         if (account.getPassword() == null || !Validation.validPassword(account.getPassword()))

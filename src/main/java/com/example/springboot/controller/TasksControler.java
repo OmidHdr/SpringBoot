@@ -1,9 +1,12 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.dto.task.TaskEdit;
+import com.example.springboot.entity.Admin;
 import com.example.springboot.entity.Tasks;
 import com.example.springboot.exeption.TasksException;
 import com.example.springboot.services.TasksServices;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +25,10 @@ public class TasksControler {
 
     //section save
     @PostMapping("/saveTasks")
+    @PreAuthorize("hasRole('ADMIN')")
     public Tasks saveService(@RequestBody Tasks service) throws TasksException {
+        Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //todo add if for check admin is not null
         return services.saveTask(service);
     }
 
