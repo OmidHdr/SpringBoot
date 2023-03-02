@@ -18,7 +18,7 @@ public interface ExpertService {
     Expert requestForNewJob(ReguestJob job) throws ExpertException, TasksException, SubTasksException;
 //    Expert removeSubServiceFromExpert(Expert expert , SubTasks sub);
 
-    void changePassword(ChangePassword changePassword) throws ExpertException;
+//    void changePassword(ChangePassword changePassword) throws ExpertException;
 
 
     List<ExpertSet> showUnconfirmExpert() throws ExpertException;

@@ -1,12 +1,15 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.dto.ChangePassword;
+import com.example.springboot.dto.customer.dtoCustomer;
+import com.example.springboot.dto.login.Login;
 import com.example.springboot.dto.payment.PayWallet;
 import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.exeption.CustomerException;
 import com.example.springboot.exeption.OfferException;
 import com.example.springboot.exeption.OrderException;
+import com.example.springboot.mapper.ProductMapper;
 import com.example.springboot.services.CustomerService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,17 +31,16 @@ public class CustomerControler {
     }
 
     @PostMapping("/login")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public Customer loginCustomer(@RequestBody Customer customer) throws CustomerException {
+    public dtoCustomer loginCustomer() {
         Customer cus = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return cus;
-//        return customerService.findByUsernameAndPassword(customer.getUsername(),customer.getPassword());
+        return ProductMapper.INSTANCE.customerToDto(cus);
     }
 
-    @PreAuthorize("hasAnyRole('')")
-    @PostMapping("/changePasswordCustomer")
+    @PostMapping("/changePassword")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public Customer changePassword(@RequestBody ChangePassword changePassword) throws CustomerException {
-        return customerService.changePassword(changePassword);
+        Customer cus = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return customerService.changePassword(cus, changePassword.getPassword());
     }
 
     @PostMapping("/find/{find}/{item}")

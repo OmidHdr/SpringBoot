@@ -50,10 +50,10 @@ public class ExpertControler {
         return expertService.showUnconfirmExpert();
     }
     //section change Pass
-    @PostMapping("/changePasswordExpert")
-    public void changePasswordExpert(@RequestBody ChangePassword changePassword) throws ExpertException {
-        expertService.changePassword(changePassword);
-    }
+//    @PostMapping("/changePasswordExpert")
+//    public void changePasswordExpert(@RequestBody ChangePassword changePassword) throws ExpertException {
+//        expertService.changePassword(changePassword);
+//    }
     //section reguest new job
     @PostMapping("/requestJob")
     public Expert requestNewJob(@RequestBody ReguestJob job) throws ExpertException, SubTasksException, TasksException {

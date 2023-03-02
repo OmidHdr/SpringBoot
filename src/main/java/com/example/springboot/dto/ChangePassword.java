@@ -10,12 +10,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ChangePassword {
-
-    @NotNull
-    String username;
     @NotNull
     String password;
-    @NotNull
-    String newPassword;
-
 }

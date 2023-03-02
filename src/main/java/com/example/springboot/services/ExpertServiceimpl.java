@@ -49,7 +49,7 @@ public class ExpertServiceimpl implements ExpertService {
             throw new ExpertException("This Subtask dose not exist please tell admin add it first");
         Expert expert = Expert.builder().firstName(account.getFirstName()).lastName(account.getLastName())
                 .email(account.getEmail()).date(LocalDate.now()).username(account.getUsername())
-                .password(account.getPassword()).userRole(UserRole.EXPERT).inventory(0L)
+                .password(account.getPassword()).userRole(UserRole.ROLE_EXPERT).inventory(0L)
                 .status(false).subTasks(Collections.singletonList(subtask)).score(10).build();
         try {
             return expertRepository.save(expert);
@@ -116,16 +116,12 @@ public class ExpertServiceimpl implements ExpertService {
     }
 
     //    section password
-    @Override
-    public void changePassword(ChangePassword changePassword) throws ExpertException {
-        if (changePassword.getPassword() == null || changePassword.getUsername() == null || changePassword.getNewPassword() == null)
-            throw new ExpertException("you should fill all of the items");
-        if (!Validation.validPassword(changePassword.getNewPassword()))
-            throw new ExpertException("password should have at least a capital Letter and a minimal Letter and 8 character");
-        Expert byUsername = findByUsernameAndPassword(changePassword.getUsername(), changePassword.getPassword());
-        byUsername.setPassword(changePassword.getNewPassword());
-        expertRepository.save(byUsername);
-    }
+//    @Override
+//    public void changePassword(ChangePassword changePassword) throws ExpertException {
+//        Expert byUsername = findByUsernameAndPassword(changePassword.getUsername(), changePassword.getPassword());
+//        byUsername.setPassword(changePassword.getNewPassword());
+//        expertRepository.save(byUsername);
+//    }
 
     //section showUnconfirmed
     public List<ExpertSet> showUnconfirmExpert() throws ExpertException {

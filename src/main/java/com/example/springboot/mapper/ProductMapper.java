@@ -1,16 +1,15 @@
 package com.example.springboot.mapper;
 
 import com.example.springboot.dto.DtoOpinion;
+import com.example.springboot.dto.customer.dtoCustomer;
+import com.example.springboot.dto.login.Login;
 import com.example.springboot.dto.offer.OfferDto;
 import com.example.springboot.dto.offer.OffersSave;
 import com.example.springboot.dto.order.OrderSave;
 import com.example.springboot.dto.task.TaskDto;
 import com.example.springboot.dto.offer.OffersSet;
 import com.example.springboot.dto.order.OrderShow;
-import com.example.springboot.entity.Offers;
-import com.example.springboot.entity.Opinion;
-import com.example.springboot.entity.Orders;
-import com.example.springboot.entity.Tasks;
+import com.example.springboot.entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -33,4 +32,5 @@ public interface ProductMapper {
 
     Orders orderSaveToOrder(OrderSave orderSave);
 
+    dtoCustomer customerToDto(Customer customer);
 }
