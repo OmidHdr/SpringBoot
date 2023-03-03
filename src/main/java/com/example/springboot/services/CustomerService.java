@@ -12,5 +12,5 @@ public interface CustomerService {
 
     Customer save(Customer customer);
 
-    Customer findCustomer(String find, String item) throws CustomerException;
+    Customer findCustomer(String find, String item) ;
 }

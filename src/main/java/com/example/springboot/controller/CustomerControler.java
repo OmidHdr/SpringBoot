@@ -26,8 +26,9 @@ public class CustomerControler {
     }
 
     @PostMapping("/register")
-    public Customer saveCustomer(@RequestBody Customer customer) throws CustomerException {
-        return customerService.saveCustomer(customer);
+    public dtoCustomer saveCustomer(@RequestBody Customer customer) throws CustomerException {
+        final Customer cus = customerService.saveCustomer(customer);
+        return ProductMapper.INSTANCE.customerToDto(cus);
     }
 
     @PostMapping("/login")
@@ -45,7 +46,7 @@ public class CustomerControler {
     }
 
     @PostMapping("/find/{find}/{item}")
-    public Customer findCustomer(@PathVariable(value = "find") String find, @PathVariable(value = "item") String item) throws CustomerException {
+    public Customer findCustomer(@PathVariable(value = "find") String find, @PathVariable(value = "item") String item){
         return customerService.findCustomer(find, item);
     }
 
