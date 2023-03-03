@@ -38,13 +38,14 @@ public class CustomerControler {
 
     @PostMapping("/changePassword")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public Customer changePassword(@RequestBody ChangePassword changePassword) throws CustomerException {
+    public dtoCustomer changePassword(@RequestBody ChangePassword changePassword) throws CustomerException {
         Customer cus = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return customerService.changePassword(cus, changePassword.getPassword());
+        final Customer customer = customerService.changePassword(cus, changePassword.getPassword());
+        return ProductMapper.INSTANCE.customerToDto(customer);
     }
 
     @PostMapping("/find/{find}/{item}")
-    public Customer findCustomer(@PathVariable(value = "find") String find , @PathVariable(value = "item") String item) throws CustomerException {
+    public Customer findCustomer(@PathVariable(value = "find") String find, @PathVariable(value = "item") String item) throws CustomerException {
         return customerService.findCustomer(find, item);
     }
 

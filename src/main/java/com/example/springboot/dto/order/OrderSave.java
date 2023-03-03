@@ -13,10 +13,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderSave {
     @NotNull
-    String username;
-    @NotNull
-    String password;
-    @NotNull
     String subtaskName;
     @NotNull
     String description;

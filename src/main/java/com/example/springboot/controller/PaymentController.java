@@ -8,23 +8,28 @@ import com.example.springboot.services.OrderService;
 import com.example.springboot.services.ValidateCaptcha;
 import com.example.springboot.validation.Validation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
+@RequestMapping("/payment")
 @RestController
 public class PaymentController {
 
     private final OrderService orderService;
-    @PostMapping("/peyment/online")
+    @PostMapping("/online")
     public String test(@ModelAttribute PaymentDto dto) throws PaymentException {
         System.out.println(dto.toString());
         Validation.validPayment(dto);
         return "ok";
     }
 
-    @PostMapping("/payment/wallet/{id}")
-    public OrderShow payWithWallet(@PathVariable(value = "id") Long id, @RequestBody Customer account) throws OrderException, CustomerException, OfferException, ExpertException, AdminException {
-        return orderService.payWithWallet(id,account);
+    @PostMapping("/wallet/{id}")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public OrderShow payWithWallet(@PathVariable(value = "id") Long id) throws OrderException, CustomerException, OfferException, ExpertException, AdminException {
+        Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return orderService.payWithWallet(id,customer);
     }
 
 }

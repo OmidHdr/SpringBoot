@@ -11,7 +11,5 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OffersGet {
-    String username;
-    String password;
     Long orderId;
 }

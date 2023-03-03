@@ -16,12 +16,12 @@ public class AdminControler {
         this.adminService = adminService;
     }
 
-    /*
+//    /*
     // only for creating admin for first time
     @PostMapping("/admin")
     public String saveAdmin(@RequestBody Admin admin) throws AdminException {
         return adminService.saveAdmin(admin);
     }
-     */
+//     */
 
 }

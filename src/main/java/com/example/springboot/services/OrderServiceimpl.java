@@ -10,6 +10,7 @@ import com.example.springboot.entity.*;
 import com.example.springboot.entity.Enum.JobStatus;
 import com.example.springboot.exeption.*;
 import com.example.springboot.mapper.ProductMapper;
+import com.example.springboot.repository.ExpertRepository;
 import com.example.springboot.repository.OfferRepository;
 import com.example.springboot.repository.OrderRepository;
 import com.example.springboot.validation.Validation;
@@ -32,6 +33,8 @@ public class OrderServiceimpl implements OrderService {
     private final AdminService adminService;
     @Autowired
     private OfferRepository offerRepository;
+    @Autowired
+    private ExpertRepository expertRepository;
 
     public OrderServiceimpl(OrderRepository orderRepository, CustomerService customerService, SubTaskServices subTaskServices, ExpertServiceimpl expertService, AdminService adminService) {
         this.orderRepository = orderRepository;
@@ -43,12 +46,10 @@ public class OrderServiceimpl implements OrderService {
 
     //section save Order
     @Override
-    public void saveOrder(OrderSave dtoOrder) throws OrderException, CustomerException, SubTasksException {
-        if (dtoOrder.getUsername() == null || dtoOrder.getPassword() == null ||
-                dtoOrder.getDescription() == null || dtoOrder.getSubtaskName() == null ||
+    public void saveOrder(OrderSave dtoOrder,Customer customer) throws OrderException, CustomerException, SubTasksException {
+        if (dtoOrder.getDescription() == null || dtoOrder.getSubtaskName() == null ||
                 dtoOrder.getProposedPrice() == null || dtoOrder.getAddress() == null)
             throw new OrderException("you should fill all of the items");
-        Customer customer = customerService.findByUsernameAndPassword(dtoOrder.getUsername(), dtoOrder.getPassword());
         SubTasks subtask = subTaskServices.findByName(dtoOrder.getSubtaskName());
         if (dtoOrder.getProposedPrice() < subtask.getBasePrice())
             throw new OrderException("you can not send dtoOrder price less than base price edit it and try again");
@@ -75,10 +76,11 @@ public class OrderServiceimpl implements OrderService {
 
     //section show jobs (Expert)
     @Override
-    public List<OrderShow> jobforExpert(OrderSave order) throws OrderException, ExpertException, SubTasksException {
-        if (order.getUsername() == null || order.getPassword() == null || order.getSubtaskName() == null)
-            throw new OrderException("you should fill all of the items");
-        final Expert expert = expertService.findByUsernameAndPassword(order.getUsername(), order.getPassword());
+    public List<OrderShow> jobforExpert(OrderSave order,Expert expert) throws OrderException, SubTasksException {
+        if ( order.getSubtaskName() == null)
+            throw new OrderException("you should give a subtask name");
+        if (!expert.getStatus())
+            throw new OrderException("this expert is deactivate first admin should confirm");
         final SubTasks subtask = subTaskServices.findByName(order.getSubtaskName());
         final List<Orders> listOrders = orderRepository.findByJobStatusAndSubTasks(JobStatus.WAITING_FOR_SUGGESTION, subtask);
         if (listOrders == null || listOrders.size() < 1)
@@ -101,14 +103,14 @@ public class OrderServiceimpl implements OrderService {
         return result;
     }
 
+
     //section send Offer
     @Override
-    public OrderShow sendOffer(OffersSave offer) throws OrderException, ExpertException, SubTasksException {
+    public OrderShow sendOffer(OffersSave offer,Expert expert) throws OrderException, ExpertException, SubTasksException {
         // چک کردن که اطلاعات خالی نباشن
-        if (offer.getUsername() == null || offer.getPassword() == null || offer.getOrderId() == null)
+        if ( offer.getOrderId() == null || offer.getPeriodOfTime() == null || offer.getSuggestion() == null ||
+                offer.getSubtaskName() == null || offer.getDate() == null)
             throw new OrderException("you should fill all of the items");
-        // پیدا کردن متخصص
-        Expert expert = expertService.findByUsernameAndPassword(offer.getUsername(), offer.getPassword());
         // پیدا کردن سفارش
         final Optional<Orders> byId = orderRepository.findById(offer.getOrderId());
         if (byId.isEmpty())
@@ -116,12 +118,13 @@ public class OrderServiceimpl implements OrderService {
         if (byId.get().getJobStatus() != JobStatus.WAITING_FOR_SUGGESTION)
             throw new OrderException("you can not send offer for this order because " +
                     "the status is not waiting for expert");
+        if (!expert.getStatus())
+                throw new ExpertException("this expert is deactivate first admin should confirm");
+        
         final Orders order = byId.get();
-
         OrderSave orderSave = OrderSave.builder()
-                .username(offer.getUsername()).password(offer.getPassword())
                 .subtaskName(offer.getSubtaskName()).build();
-        final List<OrderShow> orderShows = jobforExpert(orderSave);
+        final List<OrderShow> orderShows = jobforExpert(orderSave,expert);
         for (int i = 0; i < orderShows.size(); i++) {
             if (Objects.equals(orderShows.get(i).getId(), offer.getOrderId())) {
                 final Orders orders = orderRepository.findById(offer.getOrderId()).get();
@@ -149,21 +152,16 @@ public class OrderServiceimpl implements OrderService {
 
     //section get all suggestion
     @Override
-    public List<OffersSet> getAllExpertSuggestions(OffersGet offer) throws
+    public List<OffersSet> getAllExpertSuggestions(Long orderId,Customer customer) throws
             OfferException, CustomerException, OrderException {
-        // check offer is not null
-        if (offer.getUsername() == null || offer.getPassword() == null || offer.getOrderId() == null)
-            throw new OfferException("you should fill all of the items ");
-        // find customer
-        final Customer customer = customerService.findByUsernameAndPassword(offer.getUsername(), offer.getPassword());
-        // find order
-        final Optional<Orders> order = orderRepository.findById(offer.getOrderId());
-        if (order.isEmpty())
-            throw new OrderException("there is no result");
-        if (!Objects.equals(order.get().getCustomer().getId(), customer.getId()))
-            throw new OrderException("sorry you cant see this result");
+        // check subtask name is not null
+        if (orderId == null)
+            throw new OfferException("you should give a orderId " );
+        final List<Orders> byCustomer = orderRepository.findByCustomer(customer);
+        if (byCustomer.isEmpty())
+            throw new OrderException("you don't have access to see this result");
         // find offer
-        final List<Offers> offers = offerService.findByOrderId(offer.getOrderId());
+        final List<Offers> offers = offerService.findByOrderId(orderId);
         if (offers == null)
             throw new OrderException("there is no order");
         final List<OffersSet> result = ProductMapper.INSTANCE.offerToDtoList(offers);
@@ -172,12 +170,15 @@ public class OrderServiceimpl implements OrderService {
 
     // section select suggastion
     @Override
-    public OrderShow confirmOrder(Long idOrder, Long idOffer) throws OrderException, OfferException {
+    public OrderShow confirmOrder(Customer customer,Long idOrder, Long idOffer) throws OrderException, OfferException {
         if (idOrder == null || idOffer == null)
             throw new OrderException("you should fill all of the items");
         final Optional<Orders> byId = orderRepository.findById(idOrder);
         if (byId.isEmpty())
             throw new OrderException("order not found");
+        final List<Orders> byCustomer = orderRepository.findByCustomer(customer);
+        if (byCustomer.isEmpty())
+            throw new OrderException("you don't have access to confirm this offer");
         final Orders order = byId.get();
         final Offers offer = offerService.findById(idOffer);
         order.setJobStatus(JobStatus.EXPERT_ON_WAY);
@@ -192,10 +193,13 @@ public class OrderServiceimpl implements OrderService {
 
     //section start work
     @Override
-    public OrderShow startWork(Long id) throws OrderException {
+    public OrderShow startWork(Long id,Customer customer) throws OrderException {
         final Optional<Orders> byId = orderRepository.findById(id);
         if (byId.isEmpty())
             throw new OrderException("can't find order");
+        final List<Orders> byCustomer = orderRepository.findByCustomer(customer);
+        if (byCustomer.isEmpty())
+            throw new OrderException("you don't have access to start work");
         final Orders order = byId.get();
         if (order.getJobStatus() != JobStatus.EXPERT_ON_WAY)
             throw new OrderException("the order is not in expert on way situation");
@@ -206,7 +210,7 @@ public class OrderServiceimpl implements OrderService {
 
     //section job finished
     @Override
-    public OrderShow doneJob(Long id) throws OrderException, OfferException {
+    public OrderShow doneJob(Long id,Customer customer) throws OrderException, OfferException {
         final Optional<Orders> byId = orderRepository.findById(id);
         if (byId.isEmpty())
             throw new OrderException("failed to find order");
@@ -234,9 +238,8 @@ public class OrderServiceimpl implements OrderService {
 
     //section show orders
     @Override
-    public List<OrderShow> showOrders(Customer customer) throws CustomerException, OrderException {
-        final Customer findCustomer = customerService.findByUsernameAndPassword(customer.getUsername(), customer.getPassword());
-        final List<Orders> listOrders = orderRepository.findByCustomer(findCustomer);
+    public List<OrderShow> showOrders(Customer customer) throws OrderException {
+        final List<Orders> listOrders = orderRepository.findByCustomer(customer);
         if (listOrders.size() < 1)
             throw new OrderException("the is no Order");
         return ProductMapper.INSTANCE.listOrdersToDto(listOrders);
@@ -244,14 +247,13 @@ public class OrderServiceimpl implements OrderService {
 
     //section pay
     @Override
-    public OrderShow payWithWallet(Long id,Customer account) throws OrderException, CustomerException, OfferException, ExpertException, AdminException {
+    public OrderShow payWithWallet(Long id,Customer customer) throws OrderException, CustomerException, OfferException, ExpertException, AdminException {
         final Optional<Orders> byId = orderRepository.findById(id);
         if (byId.isEmpty())
             throw new OrderException("can't find order");
         if (byId.get().getJobStatus() != JobStatus.FINISHED)
             throw new OrderException("first finish job and try again");
         Orders order = byId.get();
-        Customer customer = customerService.findByUsernameAndPassword(account.getUsername(), account.getPassword());
         Offers offer = offerService.findByOrderAndStatus(id);
         Long idExpert = offer.getExpert().getId();
         Expert expert = expertService.findById(idExpert);
@@ -262,8 +264,8 @@ public class OrderServiceimpl implements OrderService {
         customer.setInventory(priceCustomer);
         expert.setInventory(priceExpert);
 
-        Admin admin = adminService.getAdmin("root", "root");
-        admin.setInventory((long)(offer.getSuggestion() * 0.3));
+        Admin admin = adminService.getAdmin("root");
+        admin.setInventory((long)(offer.getSuggestion() * 0.3));                                              //show
                 customerService.save(customer);
         order.setJobStatus(JobStatus.PAYED);
         orderRepository.save(order);
@@ -274,7 +276,7 @@ public class OrderServiceimpl implements OrderService {
 
     //section opinion
     @Override
-    public OrderShow sendOpinion(Long id, DtoOpinion dtoOpinion) throws OrderException, OfferException {
+    public OrderShow sendOpinion(Long id, DtoOpinion dtoOpinion,Customer customer) throws OrderException, OfferException {
         if (dtoOpinion.getOpinion() == null)
             throw new OrderException("fill opinion and try again");
         if (dtoOpinion.getSatisfaction() < 1 || dtoOpinion.getSatisfaction() > 5)
@@ -283,12 +285,15 @@ public class OrderServiceimpl implements OrderService {
         if (byId.isEmpty())
             throw new OrderException("can't find order");
         Orders order = byId.get();
+        if (!order.getCustomer().getId().equals(customer.getId()))
+            throw new OrderException("you don't have access to send opinion for this order");
         Offers offer = offerService.findByOrderAndStatus(byId.get().getId());
         Expert expert = offer.getExpert();
         if (order.getJobStatus() != JobStatus.PAYED)
-            throw new OrderException("you should pay it first");
+            throw new OrderException("Job status is not waiting for pay");
         Opinion opinion = ProductMapper.INSTANCE.dtoToOpinion(dtoOpinion);
         expert.setScore(expert.getScore() + dtoOpinion.getSatisfaction());
+        order.setJobStatus(JobStatus.CLOSE);
         order.setOpinion(opinion);
         orderRepository.save(order);
         expertService.save(expert);

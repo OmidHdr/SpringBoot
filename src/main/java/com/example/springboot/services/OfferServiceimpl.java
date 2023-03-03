@@ -55,5 +55,4 @@ public class OfferServiceimpl implements OfferService {
         return offerRepository.save(offer);
     }
 
-
 }

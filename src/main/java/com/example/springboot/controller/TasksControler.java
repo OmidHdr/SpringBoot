@@ -27,18 +27,18 @@ public class TasksControler {
     @PostMapping("/saveTasks")
     @PreAuthorize("hasRole('ADMIN')")
     public Tasks saveService(@RequestBody Tasks service) throws TasksException {
-        Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //todo add if for check admin is not null
         return services.saveTask(service);
     }
 
     //section get all task
     @GetMapping("/getAlltasks")
+    @PreAuthorize("hasAnyRole()")
     public List<Tasks> allTasks() {
         return services.allTasks();
     }
 
     //section edit task
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/editTask")
     public Tasks editTask(@RequestBody TaskEdit task) throws TasksException {
         return services.editTask(task);

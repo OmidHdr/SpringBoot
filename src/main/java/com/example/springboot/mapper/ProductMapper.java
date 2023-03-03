@@ -2,6 +2,7 @@ package com.example.springboot.mapper;
 
 import com.example.springboot.dto.DtoOpinion;
 import com.example.springboot.dto.customer.dtoCustomer;
+import com.example.springboot.dto.expert.dtoExpert;
 import com.example.springboot.dto.login.Login;
 import com.example.springboot.dto.offer.OfferDto;
 import com.example.springboot.dto.offer.OffersSave;
@@ -33,4 +34,5 @@ public interface ProductMapper {
     Orders orderSaveToOrder(OrderSave orderSave);
 
     dtoCustomer customerToDto(Customer customer);
+    dtoExpert expertToDto(Expert expert);
 }

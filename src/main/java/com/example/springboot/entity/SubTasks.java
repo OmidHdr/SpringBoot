@@ -1,5 +1,6 @@
 package com.example.springboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @Entity
 @Table(name = "sub_tasks")
+@JsonIgnoreProperties({"task"})
 public class SubTasks {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

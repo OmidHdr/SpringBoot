@@ -20,15 +20,12 @@ import java.util.List;
 @SuperBuilder
 public class Expert extends Account implements UserDetails {
 
-    Boolean status ;
-
-    byte[] image;
-
-    int score;
-
     @JoinColumn(nullable = false)
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     List<SubTasks> subTasks;
+    Boolean status ;
+    byte[] image;
+    int score;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

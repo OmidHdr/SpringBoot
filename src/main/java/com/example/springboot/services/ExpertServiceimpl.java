@@ -1,7 +1,8 @@
 package com.example.springboot.services;
 
-import com.example.springboot.dto.*;
+import com.example.springboot.dto.ReguestJob;
 import com.example.springboot.dto.expert.ExpertSet;
+import com.example.springboot.dto.expert.dtoExpert;
 import com.example.springboot.entity.Enum.UserRole;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.entity.SubTasks;
@@ -9,8 +10,11 @@ import com.example.springboot.entity.Tasks;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.exeption.TasksException;
+import com.example.springboot.mapper.ProductMapper;
 import com.example.springboot.repository.ExpertRepository;
 import com.example.springboot.validation.Validation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,18 +24,14 @@ import java.util.List;
 import java.util.Optional;
 
 
+@RequiredArgsConstructor
 @Service
 public class ExpertServiceimpl implements ExpertService {
 
     private final ExpertRepository expertRepository;
     private final TasksServiceimpl tasksService;
     private final SubTasksimpl subTasksService;
-
-    public ExpertServiceimpl(ExpertRepository expertRepository, TasksServiceimpl tasksService, SubTasksimpl subTasksService) {
-        this.expertRepository = expertRepository;
-        this.tasksService = tasksService;
-        this.subTasksService = subTasksService;
-    }
+    private final BCryptPasswordEncoder passwordEncoder;
 
     //section register
     @Override
@@ -49,7 +49,7 @@ public class ExpertServiceimpl implements ExpertService {
             throw new ExpertException("This Subtask dose not exist please tell admin add it first");
         Expert expert = Expert.builder().firstName(account.getFirstName()).lastName(account.getLastName())
                 .email(account.getEmail()).date(LocalDate.now()).username(account.getUsername())
-                .password(account.getPassword()).userRole(UserRole.ROLE_EXPERT).inventory(0L)
+                .password(passwordEncoder.encode(account.getPassword())).userRole(UserRole.ROLE_EXPERT).inventory(0L)
                 .status(false).subTasks(Collections.singletonList(subtask)).score(10).build();
         try {
             return expertRepository.save(expert);
@@ -85,70 +85,74 @@ public class ExpertServiceimpl implements ExpertService {
 
     //section confirm
     @Override
-    public void confirmExpert(Expert expert) throws ExpertException {
-        final Expert byUsername = expertRepository.findByUsername(expert.getUsername());
-        if (byUsername == null)
-            throw new ExpertException("dear admin please give expert username");
-        byUsername.setStatus(true);
-        byUsername.setScore(0);
-        expertRepository.save(byUsername);
+    public void confirmExpert(String username) throws ExpertException {
+        final Optional<Expert> byId = expertRepository.findByUsername(username);
+        if (byId.isEmpty())
+            throw new ExpertException("the id is wrong");
+        Expert expert = byId.get();
+        expert.setStatus(true);
+        expert.setScore(0);
+        expertRepository.save(expert);
     }
 
     //section reguest job
     @Override
-    public Expert requestForNewJob(ReguestJob job) throws ExpertException, TasksException, SubTasksException {
+    public Expert requestForNewJob(ReguestJob job,Expert byUserPass) throws ExpertException, SubTasksException {
         if (job.getTaskName() == null)
             throw new ExpertException("you didn't set task");
         if (job.getSubTaskName() == null)
             throw new ExpertException("you didn't set subtask");
-        if (job.getUsername() == null || job.getPassword() == null)
-            throw new ExpertException("you didn't set username or password");
-        final Expert byUserPass = expertRepository.findByUsernameAndPassword(job.getUsername(), job.getPassword());
-        if (byUserPass == null)
-            throw new ExpertException("wrong username or password");
         if (!byUserPass.getStatus())
-            throw new ExpertException("this expert is deactivate please tell admin to active it first");
-        final Tasks task = tasksService.findByName(job.getTaskName());
+            throw new ExpertException("this byUserPass is deactivate please tell admin to active it first");
         final SubTasks subTask = subTasksService.findByName(job.getSubTaskName());
         final List<SubTasks> subTasks = byUserPass.getSubTasks();
+        subTasks.forEach(subTasks1 -> {
+            if (subTasks1.getName().equals(job.getSubTaskName()))
+                try {
+                    throw new ExpertException("Expert Already have this job");
+                } catch (ExpertException e) {
+                    throw new RuntimeException(e);
+                }
+        });
         subTasks.add(subTask);
+        byUserPass.setSubTasks(subTasks);
+        byUserPass.setStatus(false);
         return expertRepository.save(byUserPass);
     }
 
     //    section password
-//    @Override
-//    public void changePassword(ChangePassword changePassword) throws ExpertException {
-//        Expert byUsername = findByUsernameAndPassword(changePassword.getUsername(), changePassword.getPassword());
-//        byUsername.setPassword(changePassword.getNewPassword());
-//        expertRepository.save(byUsername);
-//    }
+    @Override
+    public void changePassword(String password,Expert expert) throws ExpertException {
+        if(password == null ||!Validation.validPassword(password))
+            throw new ExpertException("password should have at least a Capital letter and a number and a character");
+        expert.setPassword(passwordEncoder.encode(password));
+        expertRepository.save(expert);
+    }
 
     //section showUnconfirmed
-    public List<ExpertSet> showUnconfirmExpert() throws ExpertException {
+    @Override
+    public List<dtoExpert> showUnconfirmExpert() throws ExpertException {
         final List<Expert> allByStatus = expertRepository.findAllByStatus(false);
         if (allByStatus.size() < 1)
             throw new ExpertException("there is no expert to confirm");
-        List<ExpertSet> result = new ArrayList<>();
-        allByStatus.forEach(expert -> {
-            ExpertSet e = ExpertSet.builder().firstName(expert.getFirstName()).lastName(expert.getLastName())
-                    .email(expert.getEmail()).username(expert.getUsername())
-                    .build();
-            result.add(e);
-        });
+        List<dtoExpert> result = new ArrayList<>();
+        for (int i = 0; i < allByStatus.size(); i++) {
+            result.add(ProductMapper.INSTANCE.expertToDto(allByStatus.get(i)));
+        }
+//        allByStatus.forEach(expert -> result.add(ProductMapper.INSTANCE.expertToDto(expert)));
         return result;
     }
 
     //section removeSubService
     @Override
-    public void removeExpertFromSubtask(RemoveExpertFromSubService remove) throws ExpertException, SubTasksException, TasksException {
-        if (remove.getUsername() == null || remove.getSubtaskName() == null)
-            throw new ExpertException("you should fill all of the items");
-        Expert expert = expertRepository.findByUsername(remove.getUsername());
-        SubTasks subtask = subTasksService.findByName(remove.getSubtaskName());
-        if (expert == null)
-            throw new ExpertException("this expert dose not exist");
+    public void removeExpertFromSubtask(String subTaskName , String usernameExpert) throws ExpertException, SubTasksException, TasksException {
+        SubTasks subtask = subTasksService.findByName(subTaskName);
         if (subtask == null)
             throw new ExpertException("this Subtask dose not exist");
+        final Optional<Expert> byUsername = expertRepository.findByUsername(usernameExpert);
+        if (byUsername.isEmpty())
+            throw new ExpertException("wrong username");
+        Expert expert = byUsername.get();
         List<SubTasks> subTasks = expert.getSubTasks();
         for (int i = 0; i < subTasks.size(); i++) {
             if (subTasks.get(i).getName().equals(subtask.getName())) {

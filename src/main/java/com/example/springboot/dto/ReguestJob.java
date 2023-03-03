@@ -11,10 +11,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReguestJob {
     @NotNull
-    String username;
-    @NotNull
-    String password;
-    @NotNull
     String taskName;
     @NotNull
     String subTaskName;
