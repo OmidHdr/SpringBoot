@@ -1,5 +1,6 @@
 package com.example.springboot.repository;
 
+import com.example.springboot.entity.Expert;
 import com.example.springboot.entity.Offers;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

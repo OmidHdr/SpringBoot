@@ -1,5 +1,6 @@
 package com.example.springboot.dto.order;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,11 +12,14 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderSave {
-    String username;
-    String password;
+    @NotNull
     String subtaskName;
+    @NotNull
     String description;
+    @NotNull
     String address;
-    String startDate;
-    Long priceSuggestion;
+    @NotNull
+    String finishDate;
+    @NotNull
+    Long proposedPrice;
 }

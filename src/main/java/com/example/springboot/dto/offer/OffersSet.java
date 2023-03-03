@@ -1,6 +1,7 @@
 package com.example.springboot.dto.offer;
 
 import com.example.springboot.dto.expert.ExpertGet;
+import com.example.springboot.entity.Time;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 public class OffersSet {
     Long id;
     String date;
-    String periodOfTime;
+    Time periodOfTime;
     Long suggestion;
     ExpertGet expert;
 }

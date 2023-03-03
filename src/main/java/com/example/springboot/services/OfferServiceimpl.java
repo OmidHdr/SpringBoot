@@ -1,18 +1,24 @@
 package com.example.springboot.services;
 
+import com.example.springboot.dto.order.OrderShow;
+import com.example.springboot.entity.Enum.JobStatus;
 import com.example.springboot.entity.Offers;
+import com.example.springboot.entity.Orders;
 import com.example.springboot.exeption.OfferException;
+import com.example.springboot.exeption.OrderException;
 import com.example.springboot.repository.OfferRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OfferServiceimpl implements OfferService {
 
     private final OfferRepository offerRepository;
 
-    public OfferServiceimpl(OfferRepository offerRepository ){
+    public OfferServiceimpl(OfferRepository offerRepository){
         this.offerRepository = offerRepository;
     }
 
@@ -26,20 +32,27 @@ public class OfferServiceimpl implements OfferService {
         return offerRepository.findByOrderId(id);
     }
 
+    //section find by id
     @Override
     public Offers findById(Long id) throws OfferException {
-        final Offers offers = offerRepository.findById(id).get();
-        if (offers == null)
+        final Optional<Offers> byId = offerRepository.findById(id);
+        if (byId.isEmpty())
             throw new OfferException("wrong offer id ");
-        return offers;
+        return byId.get();
     }
 
+    //section find by order and status
     @Override
     public Offers findByOrderAndStatus(Long id) throws OfferException {
         final Offers result = offerRepository.findByOrderAndStatus(id);
         if (result == null)
             throw new OfferException("there is no offer");
         return result;
+    }
+
+    @Override
+    public Offers save(Offers offer) {
+        return offerRepository.save(offer);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.springboot.dto;
 
+import io.micrometer.common.lang.NonNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,9 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TaskEdit {
+public class HelloDto {
+    @NonNull
     String name;
-    String newName;
+    @NonNull
+    String captchaResponse;
 }

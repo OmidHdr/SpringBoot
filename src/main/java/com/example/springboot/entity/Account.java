@@ -32,6 +32,6 @@ public class Account {
     String password;
     @Enumerated(EnumType.STRING)
     UserRole userRole;
-    Integer inventory;
+    Long inventory;
 
 }

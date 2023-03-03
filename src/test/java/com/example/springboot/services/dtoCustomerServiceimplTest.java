@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 //@RunWith(SpringRunner.class)
 @SpringBootTest
-class CustomerServiceimplTest {
+class dtoCustomerServiceimplTest {
 
     @Autowired
     private CustomerServiceimpl customerService;

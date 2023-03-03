@@ -1,15 +1,22 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.dto.ChangePassword;
+import com.example.springboot.dto.customer.dtoCustomer;
+import com.example.springboot.dto.login.Login;
+import com.example.springboot.dto.payment.PayWallet;
 import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.exeption.CustomerException;
+import com.example.springboot.exeption.OfferException;
+import com.example.springboot.exeption.OrderException;
+import com.example.springboot.mapper.ProductMapper;
 import com.example.springboot.services.CustomerService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/customer")
 public class CustomerControler {
 
     private final CustomerService customerService;
@@ -18,16 +25,28 @@ public class CustomerControler {
         this.customerService = customerService;
     }
 
-    @PostMapping("/registerCustomer")
+    @PostMapping("/register")
     public Customer saveCustomer(@RequestBody Customer customer) throws CustomerException {
         return customerService.saveCustomer(customer);
     }
-    @PostMapping("/loginCustomer")
-    public Customer loginCustomer(@RequestBody Customer customer) throws CustomerException {
-        return customerService.findByUsernameAndPassword(customer.getUsername(),customer.getPassword());
+
+    @PostMapping("/login")
+    public dtoCustomer loginCustomer() {
+        Customer cus = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ProductMapper.INSTANCE.customerToDto(cus);
     }
-    @PostMapping("/changePasswordCustomer")
-    public Customer changePassword(@RequestBody ChangePassword changePassword) throws CustomerException {
-        return customerService.changePassword(changePassword);
+
+    @PostMapping("/changePassword")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public dtoCustomer changePassword(@RequestBody ChangePassword changePassword) throws CustomerException {
+        Customer cus = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final Customer customer = customerService.changePassword(cus, changePassword.getPassword());
+        return ProductMapper.INSTANCE.customerToDto(customer);
     }
+
+    @PostMapping("/find/{find}/{item}")
+    public Customer findCustomer(@PathVariable(value = "find") String find, @PathVariable(value = "item") String item) throws CustomerException {
+        return customerService.findCustomer(find, item);
+    }
+
 }
