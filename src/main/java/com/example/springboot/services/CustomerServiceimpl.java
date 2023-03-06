@@ -5,6 +5,7 @@ import com.example.springboot.entity.Enum.UserRole;
 import com.example.springboot.exeption.CustomerException;
 import com.example.springboot.repository.CustomerRepository;
 import com.example.springboot.validation.Validation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,20 +15,14 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class CustomerServiceimpl implements CustomerService {
 
-    @Autowired
-    private OrderService orderService;
     private final CustomerRepository customerRepository;
-    private final OfferService offerService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final EmailSender emailSender;
 
-    public CustomerServiceimpl(CustomerRepository customerRepository, OfferService offerService, BCryptPasswordEncoder passwordEncoder) {
-        this.customerRepository = customerRepository;
-        this.offerService = offerService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     //section register
     @Override
@@ -42,6 +37,8 @@ public class CustomerServiceimpl implements CustomerService {
         account.setDate(LocalDate.now());
         account.setUserRole(UserRole.ROLE_CUSTOMER);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
+        // send email
+        emailSender.sendEmail(account.getEmail(),"confirm your email","click on this link to confirm");
         try {
             return customerRepository.save(account);
         } catch (Exception e) {
@@ -74,24 +71,9 @@ public class CustomerServiceimpl implements CustomerService {
 
     //section find
     @Override
-    public Customer findCustomer(String find, String item) throws CustomerException {
+    public Customer findCustomer(String find, String item) {
         final List<Customer> byitem = customerRepository.findByItem(find, item);
         return new Customer();
     }
 
-    //section find by username
-//    public Customer findByUsername(String username) throws CustomerException {
-//        final Optional<Customer> byId = customerRepository.findByUsername(username);
-//        if (byId.isEmpty())
-//            throw new CustomerException("User not found");
-//        Customer customer = byId.get();
-//        return new org.springframework.security.core.userdetails.User(
-//                customer.getUsername(), customer.getPassword(), getAuthorities(customer.getUserRole()));
-//        return new org.springframework.core.userdetails.Customer(customer.getUsername(),customer.getPassword()
-//        ,customer.isEnabled(),true,true,true,getAuthorities);
-//    }
-
-    private GrantedAuthority getAuthorities(UserRole roles) {
-        return new SimpleGrantedAuthority(roles.name());
-    }
 }

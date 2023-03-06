@@ -32,7 +32,7 @@ public class TasksControler {
 
     //section get all task
     @GetMapping("/getAlltasks")
-    @PreAuthorize("hasAnyRole()")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER','EXPERT')")
     public List<Tasks> allTasks() {
         return services.allTasks();
     }
