@@ -1,5 +1,6 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.subTask.SubTaskSave;
 import com.example.springboot.dto.subTask.SubtaskEdit;
 import com.example.springboot.dto.subTask.SubTaskDto;
 import com.example.springboot.entity.SubTasks;
@@ -24,7 +25,7 @@ public class SubTasksControler {
 
     @PostMapping("/saveSubTasks")
     @PreAuthorize("hasRole('ADMIN')")
-    public SubTasks saveSubTask(@RequestBody SubTasks sub) throws SubTasksException {
+    public SubTasks saveSubTask(@RequestBody SubTaskSave sub) throws SubTasksException {
         return subTaskServices.saveSubTask(sub);
     }
 

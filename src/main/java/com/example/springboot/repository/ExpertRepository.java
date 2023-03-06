@@ -1,6 +1,7 @@
 package com.example.springboot.repository;
 
 import com.example.springboot.entity.Expert;
+import com.example.springboot.entity.SubTasks;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,5 +17,8 @@ public interface ExpertRepository extends JpaRepository<Expert,Long> {
     Optional<Expert> findByUsername(String username);
 
     List<Expert> findAllByStatus(Boolean status);
+
+    List<Expert> findBySubTasks(SubTasks subTasks);
+
 
 }

@@ -1,10 +1,12 @@
 package com.example.springboot.services;
 
+import com.example.springboot.dto.subTask.SubTaskSave;
 import com.example.springboot.dto.subTask.SubtaskEdit;
 import com.example.springboot.dto.subTask.SubTaskDto;
 import com.example.springboot.entity.SubTasks;
 import com.example.springboot.entity.Tasks;
 import com.example.springboot.exeption.SubTasksException;
+import com.example.springboot.mapper.ProductMapper;
 import com.example.springboot.repository.SubTasksRepository;
 import com.example.springboot.repository.TasksRepository;
 import org.springframework.stereotype.Service;
@@ -25,16 +27,19 @@ public class SubTasksimpl implements SubTaskServices {
 
     //section save
     @Override
-    public SubTasks saveSubTask(SubTasks sub) throws SubTasksException {
-        if (sub.getTask().getName() == null)
+    public SubTasks saveSubTask(SubTaskSave sub) throws SubTasksException {
+        if (sub.getName() == null || sub.getDescription() == null ||
+                sub.getTaskName() == null || sub.getBasePrice() == null)
             throw new SubTasksException("didn't set task please set it and try again later");
-        final Tasks byName = tasksRepository.findByName(sub.getTask().getName());
+        final Tasks byName = tasksRepository.findByName(sub.getTaskName());
         if (byName == null) {
             throw new SubTasksException("Tasks dose not exist please add tasks first");
         }
+
         try {
-            sub.setTask(byName);
-            return repository.save(sub);
+            final SubTasks subTask = ProductMapper.INSTANCE.dtosave(sub);
+            subTask.setTask(byName);
+            return repository.save(subTask);
         } catch (Exception e) {
             throw new SubTasksException("SubTasks already exist");
         }

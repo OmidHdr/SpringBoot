@@ -46,7 +46,7 @@ public class CustomerControler {
     }
 
     @PostMapping("/find/{find}/{item}")
-    public Customer findCustomer(@PathVariable(value = "find") String find, @PathVariable(value = "item") String item){
+    public Customer findCustomer(@PathVariable String find, @PathVariable String item){
         return customerService.findCustomer(find, item);
     }
 

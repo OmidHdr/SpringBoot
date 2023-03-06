@@ -4,6 +4,7 @@ import com.example.springboot.dto.*;
 import com.example.springboot.dto.expert.ExpertSet;
 import com.example.springboot.dto.expert.dtoExpert;
 import com.example.springboot.entity.Expert;
+import com.example.springboot.entity.SubTasks;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.exeption.TasksException;
@@ -26,4 +27,6 @@ public interface ExpertService {
 
     void removeExpertFromSubtask(String subtaskName , String usernameExpert) throws ExpertException, SubTasksException, TasksException;
     Expert findById(Long id) throws ExpertException;
+
+    List<Expert> findBySubTask(SubTasks subtask) throws ExpertException;
 }

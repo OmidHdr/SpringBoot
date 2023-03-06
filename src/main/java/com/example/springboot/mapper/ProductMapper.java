@@ -7,6 +7,7 @@ import com.example.springboot.dto.login.Login;
 import com.example.springboot.dto.offer.OfferDto;
 import com.example.springboot.dto.offer.OffersSave;
 import com.example.springboot.dto.order.OrderSave;
+import com.example.springboot.dto.subTask.SubTaskSave;
 import com.example.springboot.dto.task.TaskDto;
 import com.example.springboot.dto.offer.OffersSet;
 import com.example.springboot.dto.order.OrderShow;
@@ -35,4 +36,7 @@ public interface ProductMapper {
 
     dtoCustomer customerToDto(Customer customer);
     dtoExpert expertToDto(Expert expert);
+
+    SubTasks dtosave (SubTaskSave dto);
+
 }

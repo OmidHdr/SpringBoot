@@ -1,6 +1,5 @@
 package com.example.springboot.config;
 
-import com.example.springboot.entity.Customer;
 import com.example.springboot.repository.AdminRepository;
 import com.example.springboot.repository.CustomerRepository;
 import com.example.springboot.repository.ExpertRepository;
@@ -15,8 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
@@ -35,6 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/customer/register").permitAll()
                 .requestMatchers("/expert/register").permitAll()
+//                .requestMatchers("/admin").permitAll()
                 .requestMatchers("/home").permitAll()
                 .and()
                 .authorizeHttpRequests().anyRequest().authenticated().and().httpBasic();

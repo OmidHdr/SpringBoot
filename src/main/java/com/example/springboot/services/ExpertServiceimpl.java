@@ -172,6 +172,14 @@ public class ExpertServiceimpl implements ExpertService {
         return byId.get();
     }
 
+    @Override
+    public List<Expert> findBySubTask(SubTasks subtask) throws ExpertException {
+        final List<Expert> bySubTasks = expertRepository.findBySubTasks(subtask);
+        if (bySubTasks.size() < 1)
+            throw new ExpertException("no Expert found");
+        return bySubTasks;
+    }
+
     public Expert save(Expert expert) {
         return expertRepository.save(expert);
     }
