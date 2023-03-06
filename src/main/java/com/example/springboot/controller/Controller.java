@@ -2,10 +2,13 @@ package com.example.springboot.controller;
 
 import com.example.springboot.dto.SearchCustomer;
 import com.example.springboot.dto.SearchExpert;
+import com.example.springboot.dto.customer.dtoCustomer;
+import com.example.springboot.dto.expert.dtoExpert;
 import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.exeption.SubTasksException;
+import com.example.springboot.mapper.ProductMapper;
 import com.example.springboot.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,14 +29,16 @@ public class Controller {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/findCustomer")
-    public List<Customer> findCustomer(@RequestBody SearchCustomer request){
-        return search.findCustomerByCriteria(request);
+    public List<dtoCustomer> findCustomer(@RequestBody SearchCustomer request){
+        final List<Customer> customers = search.findCustomerByCriteria(request);
+        return ProductMapper.INSTANCE.customersToDtos(customers);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/findExpert")
-    public List<Expert> findExpert(@RequestBody SearchExpert request) throws ExpertException, SubTasksException {
-        return search.findExpertByCriteria(request);
+    public List<dtoExpert> findExpert(@RequestBody SearchExpert request) throws ExpertException, SubTasksException {
+        final List<Expert> experts = search.findExpertByCriteria(request);
+        return ProductMapper.INSTANCE.expertsToDtos(experts);
     }
 
 }

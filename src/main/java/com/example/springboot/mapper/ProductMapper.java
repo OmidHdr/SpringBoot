@@ -35,7 +35,12 @@ public interface ProductMapper {
     Orders orderSaveToOrder(OrderSave orderSave);
 
     dtoCustomer customerToDto(Customer customer);
+
+    List<dtoCustomer> customersToDtos(List<Customer> customers);
+
     dtoExpert expertToDto(Expert expert);
+
+    List<dtoExpert> expertsToDtos(List<Expert> experts);
 
     SubTasks dtosave (SubTaskSave dto);
 

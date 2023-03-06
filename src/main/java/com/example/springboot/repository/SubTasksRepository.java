@@ -10,6 +10,4 @@ import java.util.List;
 @Repository
 public interface SubTasksRepository extends JpaRepository<SubTasks,Long> {
     SubTasks findByName(String name);
-//    @Query(value = "select * from sub_tasks",nativeQuery = true)
-//    List<SubTasks> findEverything();
 }
