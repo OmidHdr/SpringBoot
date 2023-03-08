@@ -11,11 +11,14 @@ import java.util.Optional;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer,Long> {
+
     Customer findByUsernameAndPassword(String username, String password);
 
-    @Query(value = "SELECT * FROM customer WHERE ? = ?",nativeQuery = true)
-    List<Customer> findByItem(@Param("search") String search ,@Param("item") String item);
-//    List<Customer> findByItem(@Param("item") String item);
-
     Optional<Customer> findByUsername(String username);
+
+    @Query("update Customer c set c.status = true where c.username = ?1")
+    Customer verifyCustomer(String username);
+
+    Optional<Customer> findByToken(String token);
+
 }

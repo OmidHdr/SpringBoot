@@ -1,7 +1,6 @@
 package com.example.springboot.services;
 
 import com.example.springboot.dto.DtoOpinion;
-import com.example.springboot.dto.offer.OffersGet;
 import com.example.springboot.dto.offer.OffersSave;
 import com.example.springboot.dto.offer.OffersSet;
 import com.example.springboot.dto.order.OrderSave;
@@ -13,7 +12,7 @@ import com.example.springboot.mapper.ProductMapper;
 import com.example.springboot.repository.ExpertRepository;
 import com.example.springboot.repository.OfferRepository;
 import com.example.springboot.repository.OrderRepository;
-import com.example.springboot.validation.Validation;
+import com.example.springboot.utills.Utills;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +52,7 @@ public class OrderServiceimpl implements OrderService {
         SubTasks subtask = subTaskServices.findByName(dtoOrder.getSubtaskName());
         if (dtoOrder.getProposedPrice() < subtask.getBasePrice())
             throw new OrderException("you can not send dtoOrder price less than base price edit it and try again");
-        if (!Validation.validDate(dtoOrder.getFinishDate()))
+        if (!Utills.validDate(dtoOrder.getFinishDate()))
             throw new OrderException("wrong date you should fill it this way '1401-01-01' and date can not be before today");
         Orders order = ProductMapper.INSTANCE.orderSaveToOrder(dtoOrder);
         Opinion opinion = Opinion.builder().satisfaction(0).opinion("").build();
@@ -219,7 +218,7 @@ public class OrderServiceimpl implements OrderService {
             throw new OrderException("the order should be started first");
         Offers offer = offerService.findByOrderAndStatus(id);
         Time time = Time.builder().hour(offer.getPeriodOfTime().getHour()).minute(offer.getPeriodOfTime().getMinute()).build();
-        final int delay = Validation.compareDate(offer.getDate(), time);
+        final int delay = Utills.compareDate(offer.getDate(), time);
         order.setJobStatus(JobStatus.FINISHED);
         Expert expert = offer.getExpert();
         expert.setScore(expert.getScore() - (delay / 60));

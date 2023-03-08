@@ -5,8 +5,7 @@ import com.example.springboot.dto.payment.PaymentDto;
 import com.example.springboot.entity.Customer;
 import com.example.springboot.exeption.*;
 import com.example.springboot.services.OrderService;
-import com.example.springboot.services.ValidateCaptcha;
-import com.example.springboot.validation.Validation;
+import com.example.springboot.utills.Utills;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +20,7 @@ public class PaymentController {
     @PostMapping("/online")
     public String test(@ModelAttribute PaymentDto dto) throws PaymentException {
         System.out.println(dto.toString());
-        Validation.validPayment(dto);
+        Utills.validPayment(dto);
         return "ok";
     }
 

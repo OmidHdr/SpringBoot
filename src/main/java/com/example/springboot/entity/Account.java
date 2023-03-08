@@ -33,5 +33,6 @@ public class Account {
     @Enumerated(EnumType.STRING)
     UserRole userRole;
     Long inventory;
+    String token;
 
 }

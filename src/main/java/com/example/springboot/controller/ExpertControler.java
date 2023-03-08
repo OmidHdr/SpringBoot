@@ -56,6 +56,7 @@ public class ExpertControler {
         expertService.confirmExpert(username);
         return "The expert Confirm Successfully";
     }
+
     //section show unConfirm
     @GetMapping("/showUnconfirm")
     @PreAuthorize("hasRole('ADMIN')")
@@ -63,14 +64,16 @@ public class ExpertControler {
         final List<dtoExpert> dtoExperts = expertService.showUnconfirmExpert();
         return dtoExperts;
     }
+
     //section change Pass
     @PostMapping("/changePassword")
     @PreAuthorize("hasRole('EXPERT')")
     public String changePasswordExpert(@RequestBody ChangePassword changePassword) throws ExpertException {
         Expert expert = (Expert) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        expertService.changePassword(changePassword.getPassword(),expert);
+        expertService.changePassword(changePassword.getPassword(), expert);
         return "password changed";
     }
+
     //section reguest new job
     @PostMapping("/requestJob")
     @PreAuthorize("hasRole('EXPERT')")
@@ -79,12 +82,19 @@ public class ExpertControler {
         final Expert returedExpert = expertService.requestForNewJob(job, expert);
         return ProductMapper.INSTANCE.expertToDto(returedExpert);
     }
+
     //section remove expert in sub
     @PostMapping("/removeFromSubtask")
     @PreAuthorize("hasRole('ADMIN')")
     public String removeExpertFromSubtask(@RequestBody RemoveExpertFromSubService remove) throws ExpertException, SubTasksException, TasksException {
-        expertService.removeExpertFromSubtask(remove.getSubtaskName(),remove.getUsername());
+        expertService.removeExpertFromSubtask(remove.getSubtaskName(), remove.getUsername());
         return "removed Successfully";
     }
 
+    //section verify
+    @GetMapping("/verify")
+    public dtoExpert verifyCustomer(@RequestParam("token") String token) throws ExpertException {
+        final Expert expert = expertService.verify(token);
+        return ProductMapper.INSTANCE.expertToDto(expert);
+    }
 }

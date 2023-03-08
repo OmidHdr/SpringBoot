@@ -45,9 +45,12 @@ public class CustomerControler {
         return ProductMapper.INSTANCE.customerToDto(customer);
     }
 
-    @PostMapping("/find/{find}/{item}")
-    public Customer findCustomer(@PathVariable String find, @PathVariable String item){
-        return customerService.findCustomer(find, item);
+//    @PreAuthorize("hasRole('CUSTOMER')")
+    @GetMapping("/verify")
+    public dtoCustomer verifyCustomer(@RequestParam("token") String token) throws CustomerException {
+        final Customer cus = customerService.verify(token);
+        return ProductMapper.INSTANCE.customerToDto(cus);
     }
+
 
 }

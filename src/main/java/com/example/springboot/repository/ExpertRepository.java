@@ -21,4 +21,5 @@ public interface ExpertRepository extends JpaRepository<Expert,Long> {
     List<Expert> findBySubTasks(SubTasks subTasks);
 
 
+    Optional<Expert> findByToken(String token);
 }

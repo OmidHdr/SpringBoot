@@ -4,16 +4,13 @@ import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Enum.UserRole;
 import com.example.springboot.exeption.CustomerException;
 import com.example.springboot.repository.CustomerRepository;
-import com.example.springboot.validation.Validation;
+import com.example.springboot.utills.Utills;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -27,18 +24,23 @@ public class CustomerServiceimpl implements CustomerService {
     //section register
     @Override
     public Customer saveCustomer(Customer account) throws CustomerException {
-        if (account.getFirstName() == null || account.getLastName() == null || !Validation.validString(account.getFirstName()) || !Validation.validString(account.getLastName()))
+        if (account.getFirstName() == null || account.getLastName() == null || !Utills.validString(account.getFirstName()) || !Utills.validString(account.getLastName()))
             throw new CustomerException("wrong firstname or lastname !!");
-        if (account.getPassword() == null || !Validation.validPassword(account.getPassword()))
+        if (account.getPassword() == null || !Utills.validPassword(account.getPassword()))
             throw new CustomerException("password should have at least a capital Letter and a minimal Letter and 8 character");
-        if (account.getEmail() == null || !Validation.validateEmail(account.getEmail()))
+        if (account.getEmail() == null || !Utills.validateEmail(account.getEmail()))
             throw new CustomerException("Email Not valid");
         account.setInventory(0L);
         account.setDate(LocalDate.now());
         account.setUserRole(UserRole.ROLE_CUSTOMER);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        // send email
-        emailSender.sendEmail(account.getEmail(),"confirm your email","click on this link to confirm");
+        account.setStatus(false);
+        String link = UUID.randomUUID().toString();
+        account.setToken(link);
+
+        emailSender.sendEmail(account.getEmail(),"Confirm your Account",
+                "Click on this link "+"http://localhost:8080/customer/verify?token="+link+" to confirm");
+        
         try {
             return customerRepository.save(account);
         } catch (Exception e) {
@@ -69,11 +71,14 @@ public class CustomerServiceimpl implements CustomerService {
         return customerRepository.save(account);
     }
 
-    //section find
+
+    //section verify
     @Override
-    public Customer findCustomer(String find, String item) {
-        final List<Customer> byitem = customerRepository.findByItem(find, item);
-        return new Customer();
+    public Customer verify(String token) throws CustomerException {
+        Customer customer = customerRepository.findByToken(token)
+                .orElseThrow(() -> new CustomerException("wrong token"));
+        customer.setStatus(true);
+        return customerRepository.save(customer);
     }
 
 }

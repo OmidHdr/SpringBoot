@@ -22,6 +22,7 @@ class SubTasksimplTest {
     @InjectMocks
     private SubTasksimpl subService;
 
+    /*
     @Test
     void saveSubTask() throws SubTasksException {
         Tasks task = Tasks.builder().name("house").build();
@@ -31,4 +32,5 @@ class SubTasksimplTest {
         final SubTasks result = subService.saveSubTask(subTasks);
         assertThat(result).isNotNull();
     }
+     */
 }

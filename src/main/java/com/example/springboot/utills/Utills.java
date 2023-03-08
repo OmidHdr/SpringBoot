@@ -1,4 +1,4 @@
-package com.example.springboot.validation;
+package com.example.springboot.utills;
 
 import com.example.springboot.dto.payment.PaymentDto;
 import com.example.springboot.entity.Time;
@@ -6,13 +6,13 @@ import com.example.springboot.exeption.OrderException;
 import com.example.springboot.exeption.PaymentException;
 import com.github.mfathi91.time.PersianDate;
 
-import java.time.LocalDate;
+import java.security.SecureRandom;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class Validation {
+public class Utills {
 
 
     //section valid date
@@ -78,7 +78,7 @@ public class Validation {
 
     //section String
     public static boolean validString(String string) {
-        boolean result = Validation.noNumber(string);
+        boolean result = Utills.noNumber(string);
         InternationalValidation international = new InternationalValidation();
         boolean result2 = international.checkEmpty(string);
         String returnResult = string;
@@ -144,7 +144,7 @@ public class Validation {
                                         day = 0;
                                     int hour = ((time.getHour() - (userTime.getHour() + 1)) * 60);
                                     return mDelay + day + hour;
-                                } else{
+                                } else {
                                     int hour = (((24 - (userTime.getHour() + 1)) + time.getHour()) * 60);
                                     return mDelay + day + hour;
                                 }
@@ -186,7 +186,7 @@ public class Validation {
                                     return day + month + mDelay + hour + year;
                                 }
                             }
-                        }else{
+                        } else {
                             day = (findDay * 1440);
                             if (time.getHour() >= userTime.getHour()) {
                                 int hour = ((time.getHour() - (userTime.getHour() + 1)) * 60);
@@ -206,6 +206,7 @@ public class Validation {
             return 1;
         }
     }
+
     // section valid payment
     public static void validPayment(PaymentDto dto) throws PaymentException {
         if (dto.getCardNumber().length() != 16)
@@ -220,9 +221,26 @@ public class Validation {
         int month = Integer.parseInt(split[0]);
         int year = Integer.parseInt(split[1]);
         PersianDate systemDate = PersianDate.now();
-        if (year < systemDate.getYear() || year > (systemDate.getYear() + 6 ))
+        if (year < systemDate.getYear() || year > (systemDate.getYear() + 6))
             throw new PaymentException("your card is expired try again with different card");
         System.out.println(split);
     }
+
+    //section generate link
+    public static String generateLink() {
+
+        final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        SecureRandom random = new SecureRandom();
+        long timestamp = System.currentTimeMillis();
+        StringBuilder sb = new StringBuilder();
+        sb.append(Long.toString(timestamp, 36)); // convert timestamp to base 36 string
+        for (int i = 0; i < 8; i++) {
+            int randomIndex = random.nextInt(CHARACTERS.length());
+            sb.append(CHARACTERS.charAt(randomIndex));
+        }
+        return sb.toString();
+    }
+
 
 }

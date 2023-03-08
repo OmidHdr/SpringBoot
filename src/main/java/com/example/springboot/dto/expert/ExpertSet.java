@@ -17,4 +17,5 @@ public class ExpertSet {
     String subTaskName;
     String username;
     String password;
+    String token;
 }
