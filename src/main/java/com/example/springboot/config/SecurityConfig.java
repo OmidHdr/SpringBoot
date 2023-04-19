@@ -32,8 +32,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/customer/register").permitAll()
                 .requestMatchers("/expert/register").permitAll()
+                .requestMatchers("/admin").permitAll()
                 .requestMatchers("/customer/verify").permitAll()
                 .requestMatchers("/expert/verify").permitAll()
+                .requestMatchers("/payment/**").permitAll()
                 .requestMatchers("/home").permitAll()
                 .and()
                 .authorizeHttpRequests().anyRequest().authenticated().and().httpBasic();

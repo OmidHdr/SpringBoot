@@ -3,12 +3,9 @@ package com.example.springboot.services;
 import com.example.springboot.dto.ReguestJob;
 import com.example.springboot.dto.expert.ExpertSet;
 import com.example.springboot.dto.expert.dtoExpert;
-import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Enum.UserRole;
 import com.example.springboot.entity.Expert;
 import com.example.springboot.entity.SubTasks;
-import com.example.springboot.entity.Tasks;
-import com.example.springboot.exeption.CustomerException;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.exeption.TasksException;
@@ -34,7 +31,7 @@ public class ExpertServiceimpl implements ExpertService {
 
     //section register
     @Override
-    public Expert saveExpert(ExpertSet account) throws ExpertException, TasksException, SubTasksException {
+    public Expert saveExpert(ExpertSet account) throws ExpertException, SubTasksException {
         if (account.getFirstName() == null || account.getPassword() == null || !Utills.validString(account.getFirstName()) || !Utills.validString(account.getLastName()))
             throw new ExpertException("wrong firstname or lastname !!");
         if (account.getPassword() == null || !Utills.validPassword(account.getPassword()))
@@ -47,15 +44,18 @@ public class ExpertServiceimpl implements ExpertService {
         if (subtask == null)
             throw new ExpertException("This Subtask dose not exist please tell admin add it first");
 
-        
-
-        Expert expert = Expert.builder().firstName(account.getFirstName()).lastName(account.getLastName())
-                .email(account.getEmail()).date(LocalDate.now()).username(account.getUsername())
-                .password(passwordEncoder.encode(account.getPassword())).userRole(UserRole.ROLE_EXPERT).inventory(0L)
-                .status(false).subTasks(Collections.singletonList(subtask)).score(10).build();
         String link = UUID.randomUUID().toString();
-        expert.setToken(link);
 
+        Expert expert = ProductMapper.INSTANCE.expertsetToExpert(account);
+        expert.setPassword(passwordEncoder.encode(account.getPassword()));
+        expert.setSubTasks(Collections.singletonList(subtask));
+        expert.setToken(link);
+        expert.setUserRole(UserRole.ROLE_EXPERT);
+        expert.setDate(LocalDate.now());
+        expert.setInventory(0L);
+        expert.setScore(0);
+        expert.setStatus(false);
+        
         emailSender.sendEmail(account.getEmail(),"Confirm your Account",
                 "Click on this link "+"http://localhost:8080/expert/verify?token="+link+" to confirm");
         try {

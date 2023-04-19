@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -51,11 +52,11 @@ public class CustomerServiceimpl implements CustomerService {
 
     //section login
     @Override
-    public Customer findByUsernameAndPassword(String username, String password) throws CustomerException {
-        final Customer customer = customerRepository.findByUsernameAndPassword(username, passwordEncoder.encode(password));
-        if (customer == null)
+    public Customer findByUsername(String username) throws CustomerException {
+        final Optional<Customer> byUsername = customerRepository.findByUsername(username);
+        if (byUsername.isEmpty())
             throw new CustomerException("wrong username or password");
-        return customer;
+        return byUsername.get();
     }
 
     //section change password

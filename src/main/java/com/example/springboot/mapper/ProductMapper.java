@@ -2,10 +2,12 @@ package com.example.springboot.mapper;
 
 import com.example.springboot.dto.DtoOpinion;
 import com.example.springboot.dto.customer.dtoCustomer;
+import com.example.springboot.dto.expert.ExpertSet;
 import com.example.springboot.dto.expert.dtoExpert;
 import com.example.springboot.dto.login.Login;
 import com.example.springboot.dto.offer.OfferDto;
 import com.example.springboot.dto.offer.OffersSave;
+import com.example.springboot.dto.order.DtoOrder;
 import com.example.springboot.dto.order.OrderSave;
 import com.example.springboot.dto.subTask.SubTaskSave;
 import com.example.springboot.dto.task.TaskDto;
@@ -22,11 +24,11 @@ public interface ProductMapper {
 
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
-    Offers dtoToOffers(OffersSet dto);
-
     List<OffersSet> offerToDtoList(List<Offers> offers);
 
     OrderShow orderTodto(Orders orders);
+
+    List<DtoOrder> ordersToDto(List<Orders> orders);
 
     List<OrderShow> listOrdersToDto(List<Orders> offers);
 
@@ -43,5 +45,9 @@ public interface ProductMapper {
     List<dtoExpert> expertsToDtos(List<Expert> experts);
 
     SubTasks dtosave (SubTaskSave dto);
+
+    Expert expertsetToExpert(ExpertSet expert);
+
+
 
 }

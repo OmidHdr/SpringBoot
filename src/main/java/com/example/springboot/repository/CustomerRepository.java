@@ -12,8 +12,6 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer,Long> {
 
-    Customer findByUsernameAndPassword(String username, String password);
-
     Optional<Customer> findByUsername(String username);
 
     @Query("update Customer c set c.status = true where c.username = ?1")

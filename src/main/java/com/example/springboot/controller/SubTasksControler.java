@@ -36,7 +36,7 @@ public class SubTasksControler {
     }
 
     @PostMapping("/editSubtask")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('EXPERT')")
     public void editSubTask(@RequestBody SubtaskEdit sub) throws SubTasksException {
         subTaskServices.editSubTask(sub);
     }

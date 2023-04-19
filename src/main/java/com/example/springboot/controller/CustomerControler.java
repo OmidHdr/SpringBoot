@@ -25,10 +25,13 @@ public class CustomerControler {
         this.customerService = customerService;
     }
 
+    //@PostMapping("/register")
+    //public dtoCustomer saveCustomer(@RequestBody Customer customer) throws CustomerException {
     @PostMapping("/register")
-    public dtoCustomer saveCustomer(@RequestBody Customer customer) throws CustomerException {
-        final Customer cus = customerService.saveCustomer(customer);
-        return ProductMapper.INSTANCE.customerToDto(cus);
+    public String online(@ModelAttribute Customer customer) throws CustomerException {
+        System.out.println(customer.toString());
+        customerService.saveCustomer(customer);
+        return "ok";
     }
 
     @PostMapping("/login")

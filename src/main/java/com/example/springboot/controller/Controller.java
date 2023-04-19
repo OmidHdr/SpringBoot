@@ -2,10 +2,14 @@ package com.example.springboot.controller;
 
 import com.example.springboot.dto.SearchCustomer;
 import com.example.springboot.dto.SearchExpert;
+import com.example.springboot.dto.SearchOrders;
 import com.example.springboot.dto.customer.dtoCustomer;
 import com.example.springboot.dto.expert.dtoExpert;
+import com.example.springboot.dto.order.DtoOrder;
 import com.example.springboot.entity.Customer;
 import com.example.springboot.entity.Expert;
+import com.example.springboot.entity.Orders;
+import com.example.springboot.exeption.CustomerException;
 import com.example.springboot.exeption.ExpertException;
 import com.example.springboot.exeption.SubTasksException;
 import com.example.springboot.mapper.ProductMapper;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
+@RequestMapping("/find")
 @RestController
 public class Controller {
 
@@ -28,17 +33,24 @@ public class Controller {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/findCustomer")
+    @GetMapping("/customer")
     public List<dtoCustomer> findCustomer(@RequestBody SearchCustomer request){
         final List<Customer> customers = search.findCustomerByCriteria(request);
         return ProductMapper.INSTANCE.customersToDtos(customers);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/findExpert")
-    public List<dtoExpert> findExpert(@RequestBody SearchExpert request) throws ExpertException, SubTasksException {
+    @GetMapping("/expert")
+    public List<dtoExpert> findExpert(@RequestBody SearchExpert request) throws SubTasksException {
         final List<Expert> experts = search.findExpertByCriteria(request);
         return ProductMapper.INSTANCE.expertsToDtos(experts);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/orders")
+    public List<DtoOrder> findOrders(@RequestBody SearchOrders request) throws SubTasksException, CustomerException {
+        final List<Orders> orders = search.findOrdersByCriteria(request);
+        return ProductMapper.INSTANCE.ordersToDto(orders);
     }
 
 }

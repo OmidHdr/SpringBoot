@@ -35,9 +35,19 @@ public class ExpertControler {
         this.orderService = orderService;
     }
 
+    /*
     //section register Expert
     @PostMapping("/register")
     public String saveExpert(@RequestBody ExpertSet account) throws ExpertException, SubTasksException, TasksException {
+        expertService.saveExpert(account);
+        return "Expert register successfully";
+    }
+
+     */
+    //section register Expert
+    @PostMapping("/register")
+    public String saveExpert(@ModelAttribute ExpertSet account) throws ExpertException, SubTasksException, TasksException {
+        System.out.println(account.toString());
         expertService.saveExpert(account);
         return "Expert register successfully";
     }

@@ -6,7 +6,7 @@ import com.example.springboot.exeption.CustomerException;
 public interface CustomerService {
     Customer saveCustomer(Customer account) throws CustomerException;
 
-    Customer findByUsernameAndPassword(String username, String password) throws CustomerException;
+    Customer findByUsername(String username) throws CustomerException;
 
     Customer changePassword(Customer customer,String password) throws CustomerException;
 

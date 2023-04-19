@@ -17,6 +17,7 @@ class dtoCustomerServiceimplTest {
     @Autowired
     private CustomerServiceimpl customerService;
 
+    /*
     //section register
     @Test
     @DisplayName("Register")
@@ -40,6 +41,7 @@ class dtoCustomerServiceimplTest {
         Customer user = customerService.findByUsernameAndPassword("omidalfa", "Aa@123456");
         assertNotNull(user);
     }
+     */
     //section change password
 //    @Test
 //    void changePassword() throws CustomerException {

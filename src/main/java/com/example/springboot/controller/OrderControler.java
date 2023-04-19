@@ -14,13 +14,11 @@ import com.example.springboot.services.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequestMapping("/order")
 @RestController
 public class OrderControler {
 
@@ -34,7 +32,7 @@ public class OrderControler {
 
     //section save order
     // ارسال سفارش
-    @PostMapping("/sendOrder")
+    @PostMapping("/send")
     @PreAuthorize("hasRole('CUSTOMER')")
     public String sendOrder(@RequestBody OrderSave order) throws CustomerException, SubTasksException, OrderException {
         Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -44,7 +42,7 @@ public class OrderControler {
 
     //section show order
     // مشاهده سفارش های ارسال شده
-    @PostMapping("/showOrders")
+    @GetMapping("/showAll")
     @PreAuthorize("hasRole('CUSTOMER')")
     public List<OrderShow> showOrders() throws CustomerException, OrderException {
         Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

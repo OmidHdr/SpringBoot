@@ -1,14 +1,12 @@
 package com.example.springboot.dto.expert;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Setter
 @Getter
 @Builder
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExpertSet {
     String firstName;
@@ -17,5 +15,4 @@ public class ExpertSet {
     String subTaskName;
     String username;
     String password;
-    String token;
 }

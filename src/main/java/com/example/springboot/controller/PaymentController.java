@@ -18,7 +18,7 @@ public class PaymentController {
 
     private final OrderService orderService;
     @PostMapping("/online")
-    public String test(@ModelAttribute PaymentDto dto) throws PaymentException {
+    public String online(@ModelAttribute PaymentDto dto) throws PaymentException {
         System.out.println(dto.toString());
         Utills.validPayment(dto);
         return "ok";
